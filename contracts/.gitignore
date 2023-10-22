@@ -5,7 +5,9 @@ typechain
 
 # hardhat files
 artifacts/
+artifacts-dbg/
 cache/
 src/contracts.json
 /deployments/localhost
 /typechain-types
+yarn.lock
