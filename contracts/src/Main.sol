@@ -6,14 +6,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Main is Ownable {
   uint public nbCollections;
-  mapping(uint => Collection) private _collections;
+  mapping(string => Collection) private _collections;
 
   constructor(address initialOwner) Ownable(initialOwner) {
     nbCollections = 0;
   }
 
   function createCard(
-    uint collection_id,
+    string calldata collection_id,
     string calldata uri
   ) external onlyOwner {
     Collection collection = _collections[collection_id];
@@ -21,9 +21,13 @@ contract Main is Ownable {
   }
 
   function getCollection(
-    uint collection_id
+    string calldata collection_id
   ) external view returns (Collection) {
     return _collections[collection_id];
+  }
+
+  function nbCollection() external view returns (uint) {
+    return nbCollections;
   }
 
   function createCollection(
@@ -32,35 +36,21 @@ contract Main is Ownable {
     uint nbTokens
   ) external onlyOwner {
     Collection collection = new Collection(
-      this.owner(),
+      address(this),
       name,
       symbol,
       nbTokens
     );
-    _collections[nbCollections] = collection;
+    _collections[name] = collection;
     nbCollections++;
   }
 
   function assignCard(
-    uint collection_id,
+    string calldata collection_id,
     uint token_id,
     address to
   ) external onlyOwner {
     Collection collection = _collections[collection_id];
     collection.transferFrom(this.owner(), to, token_id);
-  }
-
-  function assignN_Cards(
-    uint collection_id,
-    uint n,
-    address to
-  ) external onlyOwner {
-    Collection collection = _collections[collection_id];
-    uint nbSysOwned = collection.balanceOf(this.owner());
-    if (n > nbSysOwned) revert("Main: not enough cards");
-    for (uint i = 0; i < n; i++) {
-      uint tokenId = collection.tokenOfOwnerByIndex(this.owner(), i);
-      collection.transferFrom(this.owner(), to, tokenId);
-    }
   }
 }
