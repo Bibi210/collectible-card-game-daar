@@ -3,31 +3,21 @@ pragma solidity ^0.8;
 
 import "./Collection.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Booster.sol";
 
 contract Main is Ownable {
   uint public nbCollections;
-  mapping(string => Collection) private _collections;
+  Booster public boostersNFT;
+  mapping(string => uint) private _nameToId;
+  mapping(uint => Collection) private _idToCollection;
 
   constructor(address initialOwner) Ownable(initialOwner) {
     nbCollections = 0;
+    boostersNFT = new Booster(address(this));
   }
 
-  function createCard(
-    string calldata collection_id,
-    string calldata uri
-  ) external onlyOwner {
-    Collection collection = _collections[collection_id];
-    collection.safeMint(this.owner(), uri);
-  }
-
-  function getCollection(
-    string calldata collection_id
-  ) external view returns (Collection) {
-    return _collections[collection_id];
-  }
-
-  function nbCollection() external view returns (uint) {
-    return nbCollections;
+  function createBooster(address to, string calldata uri) external onlyOwner {
+    boostersNFT.safeMint(to, uri);
   }
 
   function createCollection(
@@ -41,16 +31,19 @@ contract Main is Ownable {
       symbol,
       nbTokens
     );
-    _collections[name] = collection;
+
+    _nameToId[name] = nbCollections;
+    _idToCollection[nbCollections] = collection;
     nbCollections++;
   }
 
-  function assignCard(
-    string calldata collection_id,
-    uint token_id,
-    address to
-  ) external onlyOwner {
-    Collection collection = _collections[collection_id];
-    collection.transferFrom(this.owner(), to, token_id);
+  function getCollectionFromId(uint id) public view returns (Collection) {
+    return _idToCollection[id];
+  }
+
+  function getCollectionFromName(
+    string calldata name
+  ) external view returns (Collection) {
+    return getCollectionFromId(_nameToId[name]);
   }
 }

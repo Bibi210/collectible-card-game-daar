@@ -12,21 +12,26 @@ import 'hardhat-abi-exporter'
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
   paths: {
-    deploy: './deploy',
+    deploy: './deploy/deployer',
     sources: './src',
   },
   namedAccounts: {
-    deployer: { default: 0 },
-    bidon: { default: 1 }
+    deployer: { default: 0 }
   },
-  abiExporter: {
+  abiExporter: [{
     runOnCompile: true,
     path: '../frontend/src/abis',
     clear: true,
     flat: true,
     only: [],
     pretty: true,
-  },
+  }, {
+    runOnCompile: true,
+    clear: true,
+    flat: true,
+    only: [],
+    pretty: true,
+  }],
   typechain: {
     outDir: '../typechain',
   },
