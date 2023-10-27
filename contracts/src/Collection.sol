@@ -16,12 +16,11 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     string memory symbol,
     uint256 nbTokens
   ) ERC721(name, symbol) Ownable(initialOwner) {
-    _nextTokenId = nbTokens + 1;
+    _nextTokenId = nbTokens;
   }
 
   function safeMint(address to, string memory uri) external onlyOwner {
     if (_nextTokenId == 0) revert("Collection: no more tokens");
-
     uint256 tokenId = _nextTokenId--;
     _safeMint(to, tokenId);
     _setTokenURI(tokenId, uri);
@@ -64,5 +63,9 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     returns (bool)
   {
     return super.supportsInterface(interfaceId);
+  }
+
+  function nbAvailableTokens() internal view returns (uint256) {
+    return _nextTokenId;
   }
 }
