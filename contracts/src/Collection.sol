@@ -6,22 +6,28 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Booster.sol";
 
 contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   uint256 private _nextTokenId;
+  uint256 public constant MAX_TOKENS = 10000;
+  string[] public UNIQ_CARDS;
+  Booster public booster;
 
   constructor(
     address initialOwner,
     string memory name,
     string memory symbol,
-    uint256 nbTokens
+    string[] memory UniqCards
   ) ERC721(name, symbol) Ownable(initialOwner) {
-    _nextTokenId = nbTokens;
+    UNIQ_CARDS = UniqCards;
+    booster = new Booster(name, symbol, this);
+    transferOwnership(address(booster));
   }
 
   function safeMint(address to, string memory uri) external onlyOwner {
-    if (_nextTokenId == 0) revert("Collection: no more tokens");
-    uint256 tokenId = _nextTokenId--;
+    if (_nextTokenId == MAX_TOKENS) revert("Max tokens reached");
+    uint256 tokenId = _nextTokenId++;
     _safeMint(to, tokenId);
     _setTokenURI(tokenId, uri);
   }
@@ -31,6 +37,22 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     for (uint256 i = 0; i < tokens.length; i++)
       tokens[i] = tokenOfOwnerByIndex(user, i);
     return tokens;
+  }
+
+  function getNbUniqCards() external view returns (uint256) {
+    return UNIQ_CARDS.length;
+  }
+
+  function buyBooster(address user) external {
+    booster.mint(user, 1);
+  }
+
+  function openBooster() external {
+    booster.openBooster();
+  }
+
+  function userBoosters(address user) external view returns (uint256) {
+    return booster.balanceOf(user);
   }
 
   function _update(

@@ -1,72 +1,66 @@
-import express from "express"
-import cors from "cors"
 import { Contract } from "ethers"
 import { HardhatRuntimeEnvironment } from "hardhat/types/runtime";
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 
 import type { Main } from "$/Main"
 import type { Collection } from "$/Collection"
-import * as crypto from 'crypto';
+
 
 let mainContract_GLB: Main;
 let superAdmin_GLB: string;
 let hre_GLB: HardhatRuntimeEnvironment;
-const nbCardsPerBooster = 5;
 
-const app = express()
-app.use(cors())
 
-async function getContract(contractName: string, address: string) {
+async function getContract<T>(contractName: string, address: string): Promise<T> {
     const factory = await hre_GLB.ethers.getContractFactory(contractName);
-    const contract = await factory.attach(address);
+    factory.attach(address);
+    const contract = factory.attach(address) as T;
     return contract;
-}
-
-function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
 async function createCollections() {
-    const sets = await PokemonTCG.getAllSets();
-    const info = sets.map((set) => {
-        const nbCards = PokemonTCG.findCardsByQueries({ q: `set.id:${set.id}` }).then((cards) => cards.length)
-        return {
-            name: set.name,
-            symbol: set.id,
-            nbCards: nbCards
-        }
+    const sets = await PokemonTCG.getAllSets()
 
+    sets.splice(10, sets.length)
+
+    const s = sets.map(async (set) => {
+        const cards = await PokemonTCG.findCardsByQueries({ q: `set.id:${set.id}` });
+        const cardsIDS = cards.map(card => card.id)
+        await mainContract_GLB.createCollection(set.name, set.id, cardsIDS)
     })
-
-    for (const set of info) {
-
-        set.nbCards.then((nb) => {
-            console.log("Create :", set.name)
-            mainContract_GLB.createCollection(set.name, set.symbol, nb * nbCardsPerBooster)
-        });
-
-        await delay(1000)
+    await Promise.all(s)
+    for (const set of sets) {
+        const setAddr = await mainContract_GLB.getCollectionFromName(set.name)
+        const CollectionContract = await getContract<Collection>("Collection", setAddr)
+        const name = await CollectionContract.name()
+        console.log("CollectionContract: ", name)
     }
 }
 
-async function createBoosters(collectionID: number) {
-    const collectionAddr = await mainContract_GLB.getCollectionFromId(collectionID);
-    const collectionContract = (await getContract("Collection", collectionAddr)) as any as Collection;
-    const collectionName = await collectionContract.name();
-    console.log("collectionName", collectionName);
+async function testBooster(collectionId: number) {
+    getContract<Collection>("Collection", await mainContract_GLB.getCollectionFromId(collectionId))
+    const setAddr = await mainContract_GLB.getCollectionFromId(0)
+    const CollectionContract = await getContract<Collection>("Collection", setAddr)
+    await CollectionContract.buyBooster(superAdmin_GLB)
+    const boosters = await CollectionContract.userBoosters(superAdmin_GLB)
+    console.log("boosters before: ", boosters)
+    await CollectionContract.openBooster()
+    const cards = await CollectionContract.userCards(superAdmin_GLB)
+    console.log("cards: ", cards)
+    console.log("boosters after: ", boosters)
+
 }
 
 
-function startServer(mainContract: Contract, superAdmin: string, _hre: HardhatRuntimeEnvironment) {
+
+
+async function setEnv(mainContract: Contract, superAdmin: string, _hre: HardhatRuntimeEnvironment) {
     mainContract_GLB = mainContract as any
     superAdmin_GLB = superAdmin
     hre_GLB = _hre;
-    createCollections();
-    app.listen(3000, () => {
-        console.log("BACKEND started on port 3000")
-    })
+    await createCollections()
+    testBooster(0)
 }
 
-export default app
-export { startServer }
+export { setEnv } 
