@@ -7,29 +7,23 @@ import "./Booster.sol";
 
 contract Main is Ownable {
   uint public nbCollections;
-  Booster public boostersNFT;
   mapping(string => uint) private _nameToId;
   mapping(uint => Collection) private _idToCollection;
 
   constructor(address initialOwner) Ownable(initialOwner) {
     nbCollections = 0;
-    boostersNFT = new Booster(address(this));
-  }
-
-  function createBooster(address to, string calldata uri) external onlyOwner {
-    boostersNFT.safeMint(to, uri);
   }
 
   function createCollection(
     string calldata name,
     string calldata symbol,
-    uint nbTokens
+    string[] calldata uniqCards
   ) external onlyOwner {
     Collection collection = new Collection(
       address(this),
       name,
       symbol,
-      nbTokens
+      uniqCards
     );
 
     _nameToId[name] = nbCollections;
@@ -45,5 +39,9 @@ contract Main is Ownable {
     string calldata name
   ) external view returns (Collection) {
     return getCollectionFromId(_nameToId[name]);
+  }
+
+  function getNbCollections() external view returns (uint) {
+    return nbCollections;
   }
 }
