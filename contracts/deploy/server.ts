@@ -22,7 +22,7 @@ async function getContract<T>(contractName: string, address: string): Promise<T>
 async function createCollections() {
     const sets = await PokemonTCG.getAllSets()
 
-    sets.splice(10, sets.length)
+    sets.splice(2, sets.length)
 
     const s = sets.map(async (set) => {
         const cards = await PokemonTCG.findCardsByQueries({ q: `set.id:${set.id}` });
@@ -39,16 +39,18 @@ async function createCollections() {
 }
 
 async function testBooster(collectionId: number) {
-    getContract<Collection>("Collection", await mainContract_GLB.getCollectionFromId(collectionId))
-    const setAddr = await mainContract_GLB.getCollectionFromId(0)
+    const setAddr = await mainContract_GLB.getCollectionFromId(collectionId)
     const CollectionContract = await getContract<Collection>("Collection", setAddr)
-    await CollectionContract.buyBooster(superAdmin_GLB)
-    const boosters = await CollectionContract.userBoosters(superAdmin_GLB)
+
+
+    await CollectionContract.buyBooster()
+    const boosters = await CollectionContract.userBoosters()
     console.log("boosters before: ", boosters)
     await CollectionContract.openBooster()
-    const cards = await CollectionContract.userCards(superAdmin_GLB)
+    const boostersAfter = await CollectionContract.userBoosters()
+    console.log("boosters after: ", boostersAfter)
+    const cards = await CollectionContract.userCards()
     console.log("cards: ", cards)
-    console.log("boosters after: ", boosters)
 
 }
 
