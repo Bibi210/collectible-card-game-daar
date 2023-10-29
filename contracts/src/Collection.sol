@@ -32,27 +32,27 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     _setTokenURI(tokenId, uri);
   }
 
-  function userCards(address user) external view returns (uint256[] memory) {
-    uint256[] memory tokens = new uint256[](balanceOf(user));
-    for (uint256 i = 0; i < tokens.length; i++)
-      tokens[i] = tokenOfOwnerByIndex(user, i);
-    return tokens;
+  function userCards() external view returns (string[] memory) {
+    string[] memory cards = new string[](balanceOf(msg.sender));
+    for (uint256 i = 0; i < cards.length; i++)
+      cards[i] = tokenURI(tokenOfOwnerByIndex(msg.sender, i));
+    return cards;
   }
 
   function getNbUniqCards() external view returns (uint256) {
     return UNIQ_CARDS.length;
   }
 
-  function buyBooster(address user) external {
-    booster.mint(user, 1);
+  function buyBooster() external {
+    booster.mint(msg.sender, 1);
   }
 
   function openBooster() external {
-    booster.openBooster();
+    booster.openBooster(msg.sender);
   }
 
-  function userBoosters(address user) external view returns (uint256) {
-    return booster.balanceOf(user);
+  function userBoosters() external view returns (uint256) {
+    return booster.balanceOf(msg.sender);
   }
 
   function _update(

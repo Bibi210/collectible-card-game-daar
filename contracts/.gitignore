@@ -11,3 +11,4 @@ src/contracts.json
 /deployments/localhost
 /typechain-types
 yarn.lock
+abi

@@ -10,7 +10,7 @@ import "./lib/MersenneTwister.sol";
 contract Booster is ERC20, ERC20Burnable {
   uint8 public constant CARD_PER_BOOSTER = 10;
   Collection public referenceCollection;
-  MersenneTwister public rng;
+  MersenneTwister public rng = new MersenneTwister();
 
   constructor(
     string memory name,
@@ -24,8 +24,8 @@ contract Booster is ERC20, ERC20Burnable {
     _mint(to, amount);
   }
 
-  function openBooster() public {
-    _burn(msg.sender, 1);
+  function openBooster(address owner) public {
+    _burn(owner, 1);
     uint256[] memory randValues = rng.getNRandValues(
       CARD_PER_BOOSTER,
       referenceCollection.getNbUniqCards()
@@ -34,7 +34,7 @@ contract Booster is ERC20, ERC20Burnable {
     for (uint256 i = 0; i < CARD_PER_BOOSTER; i++) {
       uint256 wonCard = randValues[i];
       string memory uri = referenceCollection.UNIQ_CARDS(wonCard);
-      referenceCollection.safeMint(msg.sender, uri);
+      referenceCollection.safeMint(owner, uri);
     }
   }
 }
