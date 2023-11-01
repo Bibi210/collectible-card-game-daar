@@ -1,0 +1,107 @@
+/* CSS for the popup overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* CSS for the popup */
+.popup {
+  width: 80%;
+  height: 600px;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  
+}
+
+/* CSS for the popup content */
+.popup .panel {
+  display: grid;
+  grid-auto-rows: minmax(100px, auto);
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  flex-direction: column;
+}
+.panel h2 {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: start;
+}
+
+.panel2 {
+  padding: 0;
+}
+.popup .tabs {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.panel img {
+  grid-column: 1;
+  grid-row: 1;
+  height: 110%;
+}
+
+/* CSS for the close button */
+
+.exchange-para {
+  color: black;
+  grid-column: 2/3;
+  grid-row: 1;
+  text-align: start;
+  margin-top: 5%;
+}
+
+.grid-container-popup {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Display three cards per row */
+  gap: 40px;
+  margin-top: -40%;
+  overflow: auto;
+  height: 300px;
+  border: inset;
+}
+
+.card-container-popup {
+  text-align: center;
+  padding: 20px;
+
+  
+}
+
+.card-container-popup img {
+  max-width: 100%; /* Adjust the width as needed to fit three cards per row */
+}
+
+.search-wrapper{
+  grid-column: 2/3;
+  grid-row: 1;
+  text-align: start;
+  margin-top: 9%;
+    
+}
+
+
+.close-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  z-index: 1002; /* Ensure it appears above the popup content */
+}
+
+.close-button:focus {
+  outline: none;
+}

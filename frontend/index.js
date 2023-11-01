@@ -1,7 +1,6 @@
 var currentAccount = null;
 
 
-
 // You should only attempt to request the user's account in response to user
 // interaction, such as selecting a button.
 // Otherwise, you popup-spam the user like it's 1999.
@@ -62,4 +61,31 @@ function handleAccountsChanged(accounts) {
   }
 }
 });
+
+function loadPokemonCards() {
+  fetch('pokemon_data.json')
+    .then(response => response.json())
+    .then(data => {
+      const pokemonCards = document.getElementById('pokemonCards');
+      data.forEach(card => {
+        const cardContainer = document.createElement('div');
+        cardContainer.classList.add('card-container');
+        const cardImage = document.createElement('img');
+        
+        // Ajoutez l'URL de l'image à l'élément img
+        cardImage.src = card.images.small;
+
+        cardContainer.appendChild(cardImage);
+        pokemonCards.appendChild(cardContainer);
+      });
+    })
+    .catch(error => {
+      console.error('Erreur :', error);
+    });
+}
+
+// Chargez les cartes lorsque la page est chargée
+window.addEventListener('load', loadPokemonCards);
+
+
 

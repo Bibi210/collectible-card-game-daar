@@ -1,0 +1,16 @@
+
+.title{
+    color: black;
+    margin-bottom: 3%;
+    text-align: center;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 45px;
+  }
+.card-container {
+    text-align: center;
+    padding: 10px;
+  }
+  

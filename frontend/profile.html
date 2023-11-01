@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="home.css" type="text/css" />
     <script src="index.js"></script>
     <script src="functions.js"></script>
+    <script type="module" src="profile.js"></script>
     <title>Pokémon TCG</title>
   </head>
 
@@ -25,17 +26,9 @@
          <li></li><button class="enableEthereumButton">Enable Ethereum</button></li>
        </ul>
      </nav>
-     <button id="showCardsButton" onclick="f()">show my cards</button>
-     <script>
+     <button id="showCardsButton" >show my cards</button>
+     <div class="grid-container" id="MyPokemonCards"></div>
+    
 
-        function f(){
-        var privatekey = currentAccount ;
-        var cards = getUserCards(privatekey) ;
-         document.getElementById('showCardsButton').addEventListener('click', function() {
-          console.log(currentAccount)
-          console.log(cards);
-         
-         });
-        };
-     </script>
 </html>
+
