@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import './Home.css';
 import { Link } from 'react-router-dom';
 
-const Home = ({ wallet }) => {
+const Home = () => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [pokemonData, setPokemonData] = useState([]);
+  
 
   // Ethereum Interaction
   useEffect(() => {
-    console.log(wallet)
+    
     async function enableEthereum() {
       try {
         await window.ethereum.request({ method: 'eth_requestAccounts' });

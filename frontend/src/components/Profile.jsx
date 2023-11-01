@@ -1,25 +1,25 @@
 
-import currentAccount from './Home'
-import { useWallet } from '../App'
 import pokemon from 'pokemontcgsdk'
 import { getUserCards } from '../functions/functions'
 import './profile.css';
 import React, { useState, useEffect } from 'react';
 import Popup from './Popup';
+import myWallet from './Home'
 
 
 pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
-const Profile = () => {
+const Profile = ({wallet}) => {
   const [myCards, setMyCards] = useState([]);
-  const wallet = useWallet();
-  console.log(wallet)
+  
+  
   useEffect(() => {
-
+    
+    console.log(wallet)
 
     async function fetchUserCards() {
       const cards = await getUserCards(wallet)
-      _cards.push(...cards);
+      
       const cardPromises = cards.map((cardId) =>
         pokemon.card.find(cardId).then((card) => card)
       );
@@ -35,10 +35,15 @@ const Profile = () => {
 
     fetchUserCards();
   }, []);
-  const _cards = [];
+  
+
+
+
 
   // Maintain an array of booleans to track the visibility of each card's popup
-  const [cardPopups, setCardPopups] = useState(_cards.map(() => false));
+  
+  
+  const [cardPopups, setCardPopups] = useState(myCards.map(() => false));
 
 
 
