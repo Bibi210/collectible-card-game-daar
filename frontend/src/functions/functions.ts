@@ -13,7 +13,6 @@ export async function getUserCards(wallet: {
     contract: Main;
 }) {
     const { details, contract } = wallet
-    await openPack(wallet, 0)
     const nbCollection = await contract.getNbCollections()
     let idCard: string[] = []
     for (let i = 0; i < nbCollection; i++) {
