@@ -12,7 +12,7 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   uint256 private _nextTokenId;
   uint256 public constant MAX_TOKENS = 10000;
   string[] public UNIQ_CARDS;
-  Booster public booster;
+  Booster private booster;
 
   constructor(
     address initialOwner,
