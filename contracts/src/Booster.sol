@@ -8,7 +8,7 @@ import "./Collection.sol";
 import "./lib/MersenneTwister.sol";
 
 contract Booster is ERC20, ERC20Burnable {
-  event BoosterResult(address, string);
+  event BoosterResult(address, string[]);
   uint8 public constant CARD_PER_BOOSTER = 10;
   Collection public referenceCollection;
   MersenneTwister public rng = new MersenneTwister();
@@ -31,10 +31,11 @@ contract Booster is ERC20, ERC20Burnable {
       CARD_PER_BOOSTER,
       referenceCollection.getNbUniqCards()
     );
+    string[] memory uris = new string[](CARD_PER_BOOSTER);
     for (uint256 i = 0; i < CARD_PER_BOOSTER; i++) {
       uint256 wonCard = randValues[i];
-      string memory uri = referenceCollection.UNIQ_CARDS(wonCard);
-      emit BoosterResult(owner, uri);
+      uris[i] = referenceCollection.UNIQ_CARDS(wonCard);
     }
+    emit BoosterResult(owner, uris);
   }
 }

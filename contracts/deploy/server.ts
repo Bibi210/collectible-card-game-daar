@@ -37,7 +37,10 @@ async function createCollections() {
         const name = await CollectionContract.name()
         const BoosterContract = await getContract<Collection>("Booster", await CollectionContract.getBooster())
         BoosterContract.on('BoosterResult', (owner, result) => {
-            CollectionContract.safeMint(owner, result)
+            for (const card of result) {
+                console.log("card: ", card)
+                CollectionContract.safeMint(owner, card)
+            }
         })
         console.log("CollectionContract: ", name)
     }
@@ -54,8 +57,7 @@ async function testBooster(collectionId: number) {
     await CollectionContract.openBooster()
     const boostersAfter = await CollectionContract.userBoosters()
     console.log("boosters after: ", boostersAfter)
-    const cards = await CollectionContract.userCards()
-    console.log("cards: ", cards)
+
 
 }
 
@@ -67,7 +69,6 @@ async function setEnv(mainContract: Contract, superAdmin: string, _hre: HardhatR
     superAdmin_GLB = superAdmin
     hre_GLB = _hre;
     await createCollections()
-    testBooster(0)
 }
 
 export { setEnv } 
