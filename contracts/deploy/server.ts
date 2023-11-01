@@ -4,6 +4,7 @@ import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 
 import type { Main } from "$/Main"
 import type { Collection } from "$/Collection"
+import type { Booster } from "$/Booster"
 
 
 let mainContract_GLB: Main;
@@ -34,6 +35,10 @@ async function createCollections() {
         const setAddr = await mainContract_GLB.getCollectionFromName(set.name)
         const CollectionContract = await getContract<Collection>("Collection", setAddr)
         const name = await CollectionContract.name()
+        const BoosterContract = await getContract<Collection>("Booster", await CollectionContract.getBooster())
+        BoosterContract.on('BoosterResult', (owner, result) => {
+            CollectionContract.safeMint(owner, result)
+        })
         console.log("CollectionContract: ", name)
     }
 }

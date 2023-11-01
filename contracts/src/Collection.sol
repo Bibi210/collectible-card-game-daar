@@ -22,7 +22,6 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   ) ERC721(name, symbol) Ownable(initialOwner) {
     UNIQ_CARDS = UniqCards;
     booster = new Booster(name, symbol, this);
-    transferOwnership(address(booster));
   }
 
   function safeMint(address to, string memory uri) external onlyOwner {
@@ -44,11 +43,17 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   }
 
   function buyBooster() external {
+    if (_nextTokenId + booster.CARD_PER_BOOSTER() > MAX_TOKENS)
+      revert("Max tokens reached");
     booster.mint(msg.sender, 1);
   }
 
   function openBooster() external {
     booster.openBooster(msg.sender);
+  }
+
+  function getBooster() external view returns (Booster) {
+    return booster;
   }
 
   function userBoosters() external view returns (uint256) {
