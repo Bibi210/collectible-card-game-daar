@@ -20,7 +20,7 @@ contract Main is Ownable {
     string[] calldata uniqCards
   ) external onlyOwner {
     Collection collection = new Collection(
-      address(this),
+      owner(),
       name,
       symbol,
       uniqCards
