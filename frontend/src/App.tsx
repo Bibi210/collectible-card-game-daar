@@ -23,9 +23,10 @@ const useAffect = (
   }, dependencies)
 }
 
-const useWallet = () => {
+export const useWallet = () => {
   const [details, setDetails] = useState<ethereum.Details>()
   const [contract, setContract] = useState<main.Main>()
+  console.log("in use wallet")
   useAffect(async () => {
     const details_ = await ethereum.connect('metamask')
     if (!details_) return
@@ -41,10 +42,9 @@ const useWallet = () => {
 }
 
 export const App = () => {
-  const wallet = useWallet()
   return (
     <>
-    <Home/>
+    <Home />
     
     </>
   )

@@ -8,7 +8,8 @@ import "./Collection.sol";
 import "./lib/MersenneTwister.sol";
 
 contract Booster is ERC20, ERC20Burnable {
-  uint8 public constant CARD_PER_BOOSTER = 10;
+
+  uint8 public constant CARD_PER_BOOSTER = 9;
   Collection public referenceCollection;
   MersenneTwister public rng = new MersenneTwister();
 

@@ -6,7 +6,7 @@ const home = () => {
 
   const [currentAccount, setCurrentAccount] = useState(null);
   const [pokemonData, setPokemonData] = useState([]);
-
+  
   // Ethereum Interaction
   useEffect(() => {
     async function enableEthereum() {
