@@ -1,14 +1,14 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const home = () => {
-
+const Home = ({ wallet }) => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [pokemonData, setPokemonData] = useState([]);
-  
+
   // Ethereum Interaction
   useEffect(() => {
+    console.log(wallet)
     async function enableEthereum() {
       try {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -21,7 +21,7 @@ const home = () => {
       }
     }
 
-    
+
     async function getAccount() {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const account = accounts[0];
@@ -60,26 +60,27 @@ const home = () => {
   }, []);
 
   return (
-    <html>
-    <div className="page-wrapper">
-     
-      <h2>Account: <span className="showAccount">{currentAccount}</span></h2>
-      <section className="headline">
-        <h1>Pokemon Cards NFTs</h1>
-        <p>Gotta catch them all !</p>
-      </section>
-    </div>
-    
-    <div className="grid-container" id="pokemonCards">
-      {pokemonData.map((card, index) => (
-        <div key={index} className="card-container">
-          <img src={card.images.small} alt="Pokemon Card" />
-        </div>
-      ))}
-    </div>
-    </html>
+    <>
+      <div className="page-wrapper">
 
-  )}
+        <h2>Account: <span className="showAccount">{currentAccount}</span></h2>
+        <section className="headline">
+          <h1>Pokemon Cards NFTs</h1>
+          <p>Gotta catch them all !</p>
+        </section>
+      </div>
+
+      <div className="grid-container" id="pokemonCards">
+        {pokemonData.map((card, index) => (
+          <div key={index} className="card-container">
+            <img src={card.images.small} alt="Pokemon Card" />
+          </div>
+        ))}
+      </div>
+    </>
+
+  )
+}
 
 
-export default home
+export default Home
