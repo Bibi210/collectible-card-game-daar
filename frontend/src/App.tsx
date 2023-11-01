@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styles from './styles.module.css'
 import * as ethereum from '@/lib/ethereum'
 import * as main from '@/lib/main'
 import Home from './components/Home'
-import Navbar from './components/Navbar'
+import Profile from './components/Profile';
+
 type Canceler = () => void
 const useAffect = (
   asyncEffect: () => Promise<Canceler | void>,
@@ -45,7 +48,15 @@ export const App = () => {
   if (wallet)
     return (
       <>
-        <Home wallet={wallet} />
-      </>
+      <BrowserRouter>
+      <Routes>
+        
+          <Route path='/' element={<Home />} />
+          <Route path="/profile" element={<Profile wallet={wallet} />} />
+          
+      
+      </Routes>
+    </BrowserRouter>
+    </>
     )
 }
