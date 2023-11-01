@@ -16,7 +16,8 @@ const config: HardhatUserConfig = {
     sources: './src',
   },
   namedAccounts: {
-    deployer: { default: 0 }
+    deployer: { default: 0 },
+    bidon: { default: 1 }
   },
   abiExporter: {
     runOnCompile: true,

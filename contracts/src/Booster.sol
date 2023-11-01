@@ -4,10 +4,9 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
+contract Booster is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   uint256 private _nextTokenId;
 
   constructor(
@@ -16,15 +15,20 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     string memory symbol,
     uint256 nbTokens
   ) ERC721(name, symbol) Ownable(initialOwner) {
-    _nextTokenId = nbTokens + 1;
+    _nextTokenId = nbTokens;
   }
 
-  function safeMint(address to, string memory uri) external onlyOwner {
+  function safeMint(
+    address to,
+    string memory uri
+  ) external onlyOwner returns (uint256) {
     if (_nextTokenId == 0) revert("Collection: no more tokens");
 
     uint256 tokenId = _nextTokenId--;
     _safeMint(to, tokenId);
     _setTokenURI(tokenId, uri);
+    _increaseBalance(to, 1);
+    return tokenId;
   }
 
   function userCards(address user) external view returns (uint256[] memory) {
