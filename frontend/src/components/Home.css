@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "montserrat", sans-serif;
+  }
+
+  
+  
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    color: #000;
+    font-size: 1.3rem;
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  
+  
+  /* SECTIONS */
+  
+  .headline {
+    width: 100%;
+    height: 50vh;
+    min-height: 600px;
+    background: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.7)), 
+    url('https://images.unsplash.com/photo-1613771404721-1f92d799e49f?auto=format&fit=crop&q=80&w=2938&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .headline h1, p {
+    color: #fff;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 45px;
+    }
+  .card-container {
+      text-align: center;
+      padding: 10px;
+    }
+
+  
+    

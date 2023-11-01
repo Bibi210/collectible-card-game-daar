@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import * as ethereum from '@/lib/ethereum'
 import * as main from '@/lib/main'
-
+import Home from './components/Home'
+import Navbar from './components/Navbar'
 type Canceler = () => void
 const useAffect = (
   asyncEffect: () => Promise<Canceler | void>,
@@ -42,8 +43,9 @@ const useWallet = () => {
 export const App = () => {
   const wallet = useWallet()
   return (
-    <div className={styles.body}>
-      <h1>Welcome to Pokémon TCG</h1>
-    </div>
+    <>
+    <Home/>
+    
+    </>
   )
 }

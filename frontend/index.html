@@ -1,66 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <link rel="stylesheet" href="home.css" type="text/css" />
-    <script src="index.js"></script>
-    <script src="/backend/functions.js"></script>
-    <title>Pokémon TCG</title>
-  </head>
+  <title> Pokemone</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
 
-  <div class="page-wrapper">
-    <div class="nav-wrapper">
-     <div class="grad-bar"></div>
-     <nav class="navbar">
-       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/2560px-International_Pok%C3%A9mon_logo.svg.png" alt="Company Logo">
-       <div class="menu-toggle" id="mobile-menu">
-         <span class="bar"></span>
-         <span class="bar"></span>
-         <span class="bar"></span>
-       </div>
-       <ul class="nav no-search">
-        <li class="nav-item"><a href="index.html">Home</a></li>
-        <li class="nav-item"><a href="#">MarketPlace</a></li>
-        <li class="nav-item"><a href="profile.html">Profile</a></li>
-        <li></li><button class="enableEthereumButton">Enable Ethereum</button></li>
-       </ul>
-     </nav>
-     </div>
-     <h2>Account: <span class="showAccount"></span></h2>
-     <section class="headline">
-       <h1>Pokemon Cards NFTs</h1>
-       <p>Gotta catch them all !</p>
-     </section>
-   </div>
 
-   <h1>Cartes Pokémon</h1>
-  <div class="grid-container" id="pokemonCards"></div>
-  <script>
-       function loadPokemonCards() {
-      fetch('pokemon_data.json')
-        .then(response => response.json())
-        .then(data => {
-          const pokemonCards = document.getElementById('pokemonCards');
-          data.forEach(card => {
-            const cardContainer = document.createElement('div');
-            cardContainer.classList.add('card-container');
-            const cardImage = document.createElement('img');
-            
-            // Ajoutez l'URL de l'image à l'élément img
-            cardImage.src = card.images.small;
-
-            cardContainer.appendChild(cardImage);
-            pokemonCards.appendChild(cardContainer);
-          });
-        })
-        .catch(error => {
-          console.error('Erreur :', error);
-        });
-    }
-
-    // Chargez les cartes lorsque la page est chargée
-    window.addEventListener('load', loadPokemonCards);
-  </script>
-
-   
-  </body>
 </html>
+
+
