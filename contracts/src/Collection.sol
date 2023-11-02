@@ -38,6 +38,18 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     return cards;
   }
 
+  function firstTokenOwned(
+    address owner,
+    string memory card
+  ) external view returns (uint256) {
+    for (uint256 i = 0; i < balanceOf(owner); i++)
+      if (
+        keccak256(bytes(card)) ==
+        keccak256(bytes(tokenURI(tokenOfOwnerByIndex(owner, i))))
+      ) return tokenOfOwnerByIndex(owner, i);
+    revert("Card not owned");
+  }
+
   function getNbUniqCards() external view returns (uint256) {
     return UNIQ_CARDS.length;
   }
@@ -49,6 +61,13 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   }
 
   function openBooster() external {
+    booster.openBooster(msg.sender);
+  }
+
+  function buyAndOpenBooster() external {
+    if (_nextTokenId + booster.CARD_PER_BOOSTER() > MAX_TOKENS)
+      revert("Max tokens reached");
+    booster.mint(msg.sender, 1);
     booster.openBooster(msg.sender);
   }
 
