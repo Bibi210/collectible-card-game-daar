@@ -22,5 +22,6 @@ export async function getUserCards(wallet: {
         idCard = idCard.concat(cards)
     }
     return ['sv3-3'];
+
 }
 
