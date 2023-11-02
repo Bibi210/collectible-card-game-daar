@@ -11,6 +11,7 @@ pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
 const Profile = ({wallet}) => {
   const [myCards, setMyCards] = useState([]);
+  const [selectedCard, setSelectedCard] = useState(null);
   
   
   useEffect(() => {
@@ -37,15 +38,10 @@ const Profile = ({wallet}) => {
   }, []);
   
 
-
-
-
   // Maintain an array of booleans to track the visibility of each card's popup
   
   
   const [cardPopups, setCardPopups] = useState(myCards.map(() => false));
-
-
 
   const showPopup = (cardIndex) => {
     setSelectedCard(myCards[cardIndex]);
