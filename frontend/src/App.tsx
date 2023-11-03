@@ -6,6 +6,8 @@ import * as ethereum from '@/lib/ethereum'
 import * as main from '@/lib/main'
 import Home from './components/Home'
 import Profile from './components/Profile';
+import Booster from './components/Booster';
+import MarketPlace from './components/MarketPlace' ;
 
 type Canceler = () => void
 const useAffect = (
@@ -53,7 +55,8 @@ export const App = () => {
         
           <Route path='/' element={<Home />} />
           <Route path="/profile" element={<Profile wallet={wallet} />} />
-          
+          <Route path='/booster' element={<Booster wallet={wallet} />} />
+          <Route path='/MarketPlace' element={<MarketPlace wallet={wallet} />} />
       
       </Routes>
     </BrowserRouter>
