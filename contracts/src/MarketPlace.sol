@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MarketPlace is Ownable {
   mapping(uint => Collection) private _idToCollection;
-  event Exchange(Card soldCard, Trade acceptedTrade);
+  event Exchange(ValidateTrade soldCard, ValidateTrade acceptedTrade);
   struct Card {
-    uint256 id;
+    string id;
     uint256 collectionId;
     string[] acceptedCurrencies;
     address owner;
@@ -17,6 +17,12 @@ contract MarketPlace is Ownable {
   }
   struct Trade {
     string uri;
+    uint256 collectionId;
+    address owner;
+  }
+
+  struct ValidateTrade {
+    uint256 tokenId;
     uint256 collectionId;
     address owner;
   }
@@ -42,11 +48,8 @@ contract MarketPlace is Ownable {
     uint256 collectionId,
     string[] calldata acceptedCurrency
   ) external {
-    Collection collection = _idToCollection[collectionId];
-    uint256 cardId = collection.firstTokenOwned(msg.sender, uri);
-
     Card storage card = spots[tradesCount];
-    card.id = cardId;
+    card.id = uri;
     card.collectionId = collectionId;
     card.acceptedCurrencies = new string[](acceptedCurrency.length);
     for (uint256 i = 0; i < acceptedCurrency.length; i++) {
@@ -67,22 +70,41 @@ contract MarketPlace is Ownable {
     card.done = true;
   }
 
-  function buyCard(uint256 spotId, Trade calldata usedCard) external {
+  function buyCard(
+    uint256 spotId,
+    string calldata uri,
+    uint256 collectionId
+  ) external {
+    Trade memory usedCard = Trade(uri, collectionId, msg.sender);
     Card storage card = spots[spotId];
     if (card.done) revert("Card already sold");
-    if (card.owner == msg.sender) revert("You can't buy your own card");
 
     Collection soldCollection = _idToCollection[card.collectionId];
     Collection boughtCollection = _idToCollection[usedCard.collectionId];
 
-    boughtCollection.firstTokenOwned(msg.sender, usedCard.uri);
-    aliveTrades--;
-    card.id = soldCollection.firstTokenOwned(
-      card.owner,
-      card.acceptedCurrency.uri
+    uint256 used = boughtCollection.firstTokenOwned(
+      usedCard.owner,
+      usedCard.uri
     );
-    emit Exchange(card, usedCard);
+
+    aliveTrades--;
     card.done = true;
+
+    uint256 bought = soldCollection.firstTokenOwned(card.owner, card.id);
+
+    ValidateTrade memory buyer = ValidateTrade(
+      used,
+      usedCard.collectionId,
+      msg.sender
+    );
+
+    ValidateTrade memory seller = ValidateTrade(
+      bought,
+      card.collectionId,
+      card.owner
+    );
+
+    emit Exchange(buyer, seller);
     card.acceptedCurrency = usedCard;
   }
 

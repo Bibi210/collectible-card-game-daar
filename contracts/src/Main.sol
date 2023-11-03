@@ -11,11 +11,11 @@ contract Main is Ownable {
   mapping(string => uint) private _nameToId;
   mapping(uint => Collection) private _idToCollection;
 
-  /*   MarketPlace private _marketPlace; */
+  MarketPlace private _marketPlace;
 
   constructor(address initialOwner) Ownable(initialOwner) {
     nbCollections = 0;
-    /*     _marketPlace = new MarketPlace(initialOwner); */
+    _marketPlace = new MarketPlace(address(this));
   }
 
   function createCollection(
@@ -27,15 +27,14 @@ contract Main is Ownable {
 
     _nameToId[name] = nbCollections;
     _idToCollection[nbCollections] = collection;
-    /*     _marketPlace.addCollection(nbCollections, collection); */
+    _marketPlace.addCollection(nbCollections, collection);
     nbCollections++;
   }
 
-  /* 
   function getMarketPlace() external view returns (MarketPlace) {
     return _marketPlace;
   }
- */
+
   function getCollectionFromId(uint id) public view returns (Collection) {
     return _idToCollection[id];
   }
