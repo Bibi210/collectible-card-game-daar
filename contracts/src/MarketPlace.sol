@@ -1,4 +1,4 @@
-/* // SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8;
 
 import "./Collection.sol";
@@ -48,7 +48,10 @@ contract MarketPlace is Ownable {
     Card storage card = spots[tradesCount];
     card.id = cardId;
     card.collectionId = collectionId;
-    card.acceptedCurrencies = acceptedCurrency;
+    card.acceptedCurrencies = new string[](acceptedCurrency.length);
+    for (uint256 i = 0; i < acceptedCurrency.length; i++) {
+      card.acceptedCurrencies[i] = acceptedCurrency[i];
+    }
     card.owner = msg.sender;
     card.done = false;
 
@@ -95,4 +98,3 @@ contract MarketPlace is Ownable {
     return cards;
   }
 }
- */
