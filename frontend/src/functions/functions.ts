@@ -22,7 +22,7 @@ export async function getUserCards(wallet: {
         const cards = await collectionContract.userCards()
         idCard = idCard.concat(cards)
     }
-    return idCard
+    return ["sv3pt5-7"]
 }
 
 export async function openPack(wallet: {
@@ -42,3 +42,24 @@ export async function openPack(wallet: {
     await collectionContract.buyAndOpenBooster()
 
 }
+
+export function addToMarketplace(cardId : String, AcceptedCards : String[] ) {
+
+    const card = {
+        cardId , AcceptedCards
+    }
+
+    console.log(AcceptedCards)
+
+}
+
+export function getMarketPlaceCards() {
+    const card1 = new Map();
+    card1.set("sv2-2", ["sv2-5", "sv2-6", "sv2-7"]);
+  
+    const card2 = new Map();
+    card2.set("sv2-9", ["sv2-10", "sv2-11", "sv2-12"]);
+  
+    return [card1, card2];
+  }
+  

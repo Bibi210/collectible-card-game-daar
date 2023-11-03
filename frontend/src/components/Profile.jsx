@@ -7,7 +7,7 @@ import Popup from './Popup';
 import myWallet from './Home'
 
 
-pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
+ 
 
 const Profile = ({wallet}) => {
   const [myCards, setMyCards] = useState([]);
@@ -18,7 +18,7 @@ const Profile = ({wallet}) => {
     
     console.log(wallet)
 
-    async function fetchUserCards() {
+     async function fetchUserCards() {
       const cards = await getUserCards(wallet)
       
       const cardPromises = cards.map((cardId) =>
