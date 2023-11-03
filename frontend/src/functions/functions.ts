@@ -1,11 +1,22 @@
 import * as ethereum from '../lib/ethereum'
-import { contracts } from '@/contracts.json'
 import type { Main } from '../../../typechain/src/Main'
 import type { Collection } from '../../../typechain/src/Collection'
 import type { Booster } from '../../../typechain/src/Booster'
+import type { MarketPlace } from '../../../typechain/src/MarketPlace'
 import { ethers } from 'ethers'
 import CollectionAbi from '@/abis/Collection.json'
 import BoosterAbi from '@/abis/Booster.json'
+import MarketPlaceAbi from '@/abis/MarketPlace.json'
+import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
+
+
+export async function getContract<T>(addr: Promise<string>, abi: ethers.ContractInterface, signer: ethers.providers.JsonRpcSigner | undefined) {
+    const contract = new ethers.Contract(await addr, abi, signer)
+    if (signer)
+        contract.connect(signer)
+    return contract as any as T
+}
+
 
 /** une fonction qui prend la clé privée d'un utilisateur et renvoie la liste d'id des cartes qu'il possede */
 export async function getUserCards(wallet: {
@@ -22,7 +33,7 @@ export async function getUserCards(wallet: {
         const cards = await collectionContract.userCards()
         idCard = idCard.concat(cards)
     }
-    return ["sv3pt5-7"]
+    return idCard
 }
 
 export async function openPack(wallet: {
@@ -61,23 +72,68 @@ export async function getSetMap(wallet: {
 }
 
 
-export function addToMarketplace(cardId: String, AcceptedCards: String[]) {
+type CardStruct = {
+    uri: string;
+    acceptedCurrencies: string[];
+    owner: string;
+    spotId: number
+};
 
-    const card = {
-        cardId, AcceptedCards
-    }
-
-    console.log(AcceptedCards)
-
+export async function uriToCollectionId(wallet: {
+    details: ethereum.Details;
+    contract: Main;
+}, uri: string) {
+    const { details, contract } = wallet;
+    const card = await PokemonTCG.findCardByID(uri)
+    const set = card.set.name
+    return contract.getCollectionIdFromName(set)
 }
 
-export function getMarketPlaceCards() {
-    const card1 = new Map();
-    card1.set("sv2-2", ["sv2-5", "sv2-6", "sv2-7"]);
-
-    const card2 = new Map();
-    card2.set("sv2-9", ["sv2-10", "sv2-11", "sv2-12"]);
-
-    return [card1, card2];
+export async function getMarketPlaceCards(wallet: {
+    details: ethereum.Details;
+    contract: Main;
+}): Promise<CardStruct[]> {
+    const { details, contract } = wallet;
+    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    const market = await MarketPlace.seeMarketPlace()
+    const cards = market.map((card) => {
+        return {
+            uri: card.id,
+            acceptedCurrencies: card.acceptedCurrencies,
+            owner: card.owner,
+            spotId: card.spotId
+        }
+    })
+    return cards
 }
 
+
+export async function addToMarketplace(wallet: {
+    details: ethereum.Details;
+    contract: Main;
+}, cardId: string, AcceptedCards: string[]) {
+    const { details, contract } = wallet;
+    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    uriToCollectionId(wallet, cardId).then((collectionId) => {
+        MarketPlace.sellCard(collectionId, cardId, AcceptedCards)
+    })
+}
+
+export async function removeFromMarketplace(wallet: {
+    details: ethereum.Details;
+    contract: Main;
+}, spotId: number) {
+    const { details, contract } = wallet;
+    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    MarketPlace.unSellCard(spotId)
+}
+
+
+export async function buyFromMarketplace(wallet: {
+    details: ethereum.Details;
+    contract: Main;
+}, spot: CardStruct, currency: string) {
+    const { details, contract } = wallet;
+    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    MarketPlace.buyCard(spot.spotId, currency, await contract.getCollectionIdFromName(currency))
+}

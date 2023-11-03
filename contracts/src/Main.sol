@@ -45,6 +45,12 @@ contract Main is Ownable {
     return getCollectionFromId(_nameToId[name]);
   }
 
+  function getCollectionIdFromName(
+    string calldata name
+  ) public view returns (uint256) {
+    return _nameToId[name];
+  }
+
   function getNbCollections() external view returns (uint) {
     return nbCollections;
   }
