@@ -38,15 +38,22 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     return cards;
   }
 
+  function compare(
+    string memory str1,
+    string memory str2
+  ) internal pure returns (bool) {
+    return
+      keccak256(abi.encodePacked(str1)) == keccak256(abi.encodePacked(str2));
+  }
+
   function firstTokenOwned(
     address owner,
     string memory card
   ) external view returns (uint256) {
-    for (uint256 i = 0; i < balanceOf(owner); i++)
-      if (
-        keccak256(bytes(card)) ==
-        keccak256(bytes(tokenURI(tokenOfOwnerByIndex(owner, i))))
-      ) return tokenOfOwnerByIndex(owner, i);
+    for (uint256 i = 0; i < balanceOf(owner); i++) {
+      if (compare(tokenURI(tokenOfOwnerByIndex(owner, i)), card))
+        return tokenOfOwnerByIndex(owner, i);
+    }
     revert("Card not owned");
   }
 
