@@ -22,7 +22,6 @@ async function getContract<T>(contractName: string, address: string): Promise<T>
 
 async function createCollections() {
     const sets = await PokemonTCG.getAllSets()
-
     sets.splice(2, sets.length)
 
     const s = sets.map(async (set) => {
