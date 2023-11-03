@@ -43,10 +43,28 @@ export async function openPack(wallet: {
 
 }
 
-export function addToMarketplace(cardId : String, AcceptedCards : String[] ) {
+export async function getSetMap(wallet: {
+    details: ethereum.Details;
+    contract: Main;
+}) {
+    const { details, contract } = wallet
+    const nbSets = await contract.getNbCollections()
+    let out: Map<number, string> = new Map()
+    for (let i = 0; i < nbSets; i++) {
+        const collectionAddr = await contract.getCollectionFromId(i)
+        const collectionContract = await new ethers.Contract(collectionAddr, CollectionAbi, details.signer) as any as Collection
+        collectionContract.connect(details.signer)
+        const name = await collectionContract.name()
+        out.set(i, name)
+    }
+    return out
+}
+
+
+export function addToMarketplace(cardId: String, AcceptedCards: String[]) {
 
     const card = {
-        cardId , AcceptedCards
+        cardId, AcceptedCards
     }
 
     console.log(AcceptedCards)
@@ -56,10 +74,10 @@ export function addToMarketplace(cardId : String, AcceptedCards : String[] ) {
 export function getMarketPlaceCards() {
     const card1 = new Map();
     card1.set("sv2-2", ["sv2-5", "sv2-6", "sv2-7"]);
-  
+
     const card2 = new Map();
     card2.set("sv2-9", ["sv2-10", "sv2-11", "sv2-12"]);
-  
+
     return [card1, card2];
-  }
-  
+}
+
