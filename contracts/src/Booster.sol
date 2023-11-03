@@ -25,7 +25,7 @@ contract Booster is ERC20, ERC20Burnable {
     _mint(to, amount);
   }
 
-  function openBooster(address owner) public {
+  function openBooster(address owner) public returns (string[] memory) {
     _burn(owner, 1);
     uint256[] memory randValues = rng.getNRandValues(
       CARD_PER_BOOSTER,
@@ -37,5 +37,6 @@ contract Booster is ERC20, ERC20Burnable {
       uris[i] = referenceCollection.UNIQ_CARDS(wonCard);
     }
     emit BoosterResult(owner, uris);
+    return uris;
   }
 }
