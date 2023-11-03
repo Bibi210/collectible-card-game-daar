@@ -14,6 +14,7 @@ contract MarketPlace is Ownable {
     address owner;
     bool done;
     Trade acceptedCurrency;
+    uint256 spotId;
   }
   struct Trade {
     string uri;
@@ -52,11 +53,12 @@ contract MarketPlace is Ownable {
     card.id = uri;
     card.collectionId = collectionId;
     card.acceptedCurrencies = new string[](acceptedCurrency.length);
-    for (uint256 i = 0; i < acceptedCurrency.length; i++) {
+    for (uint256 i = 0; i < acceptedCurrency.length; i++) 
       card.acceptedCurrencies[i] = acceptedCurrency[i];
-    }
+    
     card.owner = msg.sender;
     card.done = false;
+    card.spotId = tradesCount;
 
     aliveTrades++;
     tradesCount++;
