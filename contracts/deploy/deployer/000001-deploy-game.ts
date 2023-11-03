@@ -10,7 +10,7 @@ const deployer: DeployFunction = async hre => {
   const main = (await Main.deploy(deployer))
   await main.deployed();
   console.log("Main deployed to:", main.address);
-  setEnv(main, deployer, hre)
+  await setEnv(main, deployer, hre)
 }
 
 
