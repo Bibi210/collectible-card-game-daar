@@ -78,6 +78,10 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     booster.openBooster(msg.sender);
   }
 
+  function getLastBooster() external view returns (string[] memory) {
+    return booster.getLastBooster(msg.sender);
+  }
+
   function getBooster() external view returns (Booster) {
     return booster;
   }

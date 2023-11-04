@@ -10,15 +10,14 @@ import MarketPlaceAbi from '@/abis/MarketPlace.json'
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 
 
-export async function getContract<T>(addr: Promise<string>, abi: ethers.ContractInterface, signer: ethers.providers.JsonRpcSigner | undefined) {
-    const contract = new ethers.Contract(await addr, abi, signer)
+export function getContract<T>(addr: string, abi: ethers.ContractInterface, signer: ethers.providers.JsonRpcSigner | undefined) {
+    const contract = new ethers.Contract(addr, abi, signer)
     if (signer)
         contract.connect(signer)
     return contract as any as T
 }
 
 
-/** une fonction qui prend la clé privée d'un utilisateur et renvoie la liste d'id des cartes qu'il possede */
 export async function getUserCards(wallet: {
     details: ethereum.Details;
     contract: Main;
@@ -27,9 +26,7 @@ export async function getUserCards(wallet: {
     const nbCollection = await contract.getNbCollections()
     let idCard: string[] = []
     for (let i = 0; i < nbCollection; i++) {
-        const collectionAddr = await contract.getCollectionFromId(i)
-        const collectionContract = await new ethers.Contract(collectionAddr, CollectionAbi, details.signer) as any as Collection
-        collectionContract.connect(details.signer)
+        const collectionContract = getContract<Collection>(await contract.getCollectionFromId(i), CollectionAbi, details.signer)
         const cards = await collectionContract.userCards()
         idCard = idCard.concat(cards)
     }
@@ -42,16 +39,14 @@ export async function openPack(wallet: {
 }, id: number) {
     const { details, contract } = wallet
     const collectionAddr = await contract.getCollectionFromId(id)
-    const collectionContract = await new ethers.Contract(collectionAddr, CollectionAbi, details.signer) as any as Collection
-    collectionContract.connect(details.signer)
+    const collectionContract = getContract<Collection>(collectionAddr, CollectionAbi, details.signer)
     const boosterAddr = await collectionContract.getBooster()
-    const boosterContract = await new ethers.Contract(boosterAddr, BoosterAbi, details.signer) as any as Booster
-    boosterContract.connect(details.signer)
+    const boosterContract = getContract<Booster>(boosterAddr, BoosterAbi, details.signer)
     boosterContract.on('BoosterResult', (adr: string, cards: string[]) => {
         console.log(adr, cards)
     })
     await collectionContract.buyAndOpenBooster()
-
+    return collectionContract.getLastBooster()
 }
 
 export async function getSetMap(wallet: {
@@ -60,13 +55,11 @@ export async function getSetMap(wallet: {
 }) {
     const { details, contract } = wallet
     const nbSets = await contract.getNbCollections()
-    let out: Map<number, string> = new Map()
+    let out: Map<string, number> = new Map()
     for (let i = 0; i < nbSets; i++) {
-        const collectionAddr = await contract.getCollectionFromId(i)
-        const collectionContract = await new ethers.Contract(collectionAddr, CollectionAbi, details.signer) as any as Collection
-        collectionContract.connect(details.signer)
+        const collectionContract = getContract<Collection>(await contract.getCollectionFromId(i), CollectionAbi, details.signer)
         const name = await collectionContract.name()
-        out.set(i, name)
+        out.set(name, i)
     }
     return out
 }
@@ -83,10 +76,9 @@ export async function uriToCollectionId(wallet: {
     details: ethereum.Details;
     contract: Main;
 }, uri: string) {
-    const { details, contract } = wallet;
     const card = await PokemonTCG.findCardByID(uri)
     const set = card.set.name
-    return contract.getCollectionIdFromName(set)
+    return wallet.contract.getCollectionIdFromName(set)
 }
 
 export async function getMarketPlaceCards(wallet: {
@@ -94,7 +86,7 @@ export async function getMarketPlaceCards(wallet: {
     contract: Main;
 }): Promise<CardStruct[]> {
     const { details, contract } = wallet;
-    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
     const market = await MarketPlace.seeMarketPlace()
     const cards = market.map((card) => {
         return {
@@ -113,7 +105,7 @@ export async function addToMarketplace(wallet: {
     contract: Main;
 }, cardId: string, AcceptedCards: string[]) {
     const { details, contract } = wallet;
-    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
     uriToCollectionId(wallet, cardId).then((collectionId) => {
         MarketPlace.sellCard(collectionId, cardId, AcceptedCards)
     })
@@ -124,7 +116,7 @@ export async function removeFromMarketplace(wallet: {
     contract: Main;
 }, spotId: number) {
     const { details, contract } = wallet;
-    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    const MarketPlace = await getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
     MarketPlace.unSellCard(spotId)
 }
 
@@ -134,6 +126,6 @@ export async function buyFromMarketplace(wallet: {
     contract: Main;
 }, spot: CardStruct, currency: string) {
     const { details, contract } = wallet;
-    const MarketPlace = await getContract<MarketPlace>(contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    const MarketPlace = await getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
     MarketPlace.buyCard(spot.spotId, currency, await contract.getCollectionIdFromName(currency))
 }
