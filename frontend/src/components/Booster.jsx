@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import pokemon from 'pokemontcgsdk'
 import './Booster.css';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
 import PopupBooster from './PopupBooster';
 import { getAvalibleSet } from '@/functions/functions';
+import { openPack } from '../functions/functions';
 
 pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
@@ -18,16 +20,20 @@ const Booster = ({ wallet }) => {
   useEffect(() => {
     async function getAllSets() {
       try {
-        const sets = await pokemon.set.where({ pageSize: 250, page: 1 });
         const avalibleSets = await getAvalibleSet(wallet);
-        sets.data = sets.data.filter((set) => avalibleSets.includes(set.id));
-        setPokemonSets(sets.data);
+        console.log(avalibleSets)
+        const setPromises=avalibleSets.map(set=>pokemon.set.find(set))
+        const sets = await Promise.all(setPromises);
+        console.log(sets)
+        setPokemonSets(sets);
+       
       } catch (error) {
         console.error('Error fetching sets:', error);
       }
     }
 
     getAllSets();
+    console.log(pokemonSets)
   }, []);
 
   const [boosterPopups, setBoosterPopups] = useState(pokemonSets.map(() => false));
@@ -45,6 +51,51 @@ const Booster = ({ wallet }) => {
     // Close all card popups
     setBoosterPopups(boosterPopups.map(() => false));
   };
+
+/*open pack */
+const [lastBooster, setLastBooster] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+const handleOpenPack = async (set,index) => {
+  try {
+    setIsLoading(true);
+    const result = await openPack(wallet, set.id);
+
+    console.log('Last booster:', result);
+    const BoosterPromises = result.map(id => pokemon.card.find(id))
+    const booster = await Promise.all(BoosterPromises);
+    console.log(booster)
+    setLastBooster(booster);
+    
+    showPopup(index)
+
+    // Assuming that result contains an array of cards, you can log the cards
+    result.cards.forEach((card, index) => {
+      console.log(`Card ${index + 1}:`, card);
+    });
+
+    setIsLoading(false);
+  } catch (err) {
+    setError(err);
+    setIsLoading(false);
+    console.error('Error opening the booster pack:', err);
+  }
+};
+useEffect(() => {
+ 
+    handleOpenPack();
+    console.log(lastBooster)
+
+  
+}, []);
+/**************************** */
+
+
+
+
+
+
+
   return (
 
     <div className="page-wrapper">
@@ -53,8 +104,7 @@ const Booster = ({ wallet }) => {
       <div className="sets-container" id="pokemonCards">
         {pokemonSets.map((Set, index) => (
           <><Card className="setCard" sx={{ maxWidth: 345 }} >
-            <CardActionArea onClick={() => showPopup(index)}>
-              <PopupBooster isVisible={boosterPopups[index]} onClose={hidePopup} set={Set} wallet={wallet} >
+            <PopupBooster isVisible={boosterPopups[index]} onClose={hidePopup} set={Set} booster={lastBooster} >
                 {/* Additional content for the popup */}
               </PopupBooster>
               <CardMedia className='cardImg'
@@ -69,8 +119,15 @@ const Booster = ({ wallet }) => {
                 <Typography variant="body2" color="text.secondary">
                   Buy a  {Set.name} booster and discover the cards.
                 </Typography>
+                <CardActions>
+               
+                          <Button size="small" onClick={() => handleOpenPack(Set,index)}>Open booster</Button>
+
+
+                
+                </CardActions>
               </CardContent>
-            </CardActionArea>
+            
           </Card></>
         ))}
       </div>

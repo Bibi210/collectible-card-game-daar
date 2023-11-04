@@ -20,5 +20,24 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1001;
+    overflow: auto;
     
   }
+
+  .grid-container-booster {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 45px;
+  }
+.card-container {
+    text-align: center;
+    padding: 10px;
+  }
+
+.close-button-booster{
+  margin-left: 90%;
+}
+
+.Booster-title {
+  margin-bottom: 3%;
+}
