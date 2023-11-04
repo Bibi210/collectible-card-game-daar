@@ -29,21 +29,20 @@ async function createCollections() {
         const cards = await PokemonTCG.findCardsByQueries({ q: `set.id:${set.id}` });
         const cardsIDS = cards.map(card => card.id)
         await mainContract_GLB.createCollection(set.id, set.name, cardsIDS)
-    })
-    await Promise.all(s)
-    for (const set of sets) {
         const setAddr = await mainContract_GLB.getCollectionFromName(set.id)
         const CollectionContract = await getContract<Collection>("Collection", setAddr)
         const BoosterContract = await getContract<Booster>("Booster", await CollectionContract.getBooster())
         BoosterContract.on('BoosterResult', (owner: string, result: string[]) => {
             for (const card of result) {
-                console.log("card: ", card)
+                console.log("Mint: ", card, "To: ", owner)
                 CollectionContract.safeMint(owner, card)
             }
         })
         const name = await CollectionContract.symbol()
         console.log("CollectionContract: ", name)
-    }
+    })
+    await Promise.all(s)
+
 
     const MarketPlaceContract = await getContract<MarketPlace>("MarketPlace", await mainContract_GLB.getMarketPlace())
     MarketPlaceContract.on('Exchange', (card: MarketPlace.ValidateTradeStruct, trade: MarketPlace.ValidateTradeStruct) => {
