@@ -5,6 +5,7 @@ import './profile.css';
 import React, { useState, useEffect } from 'react';
 import Popup from './Popup';
 import myWallet from './Home'
+import { PokemonTCG } from 'pokemon-tcg-sdk-typescript';
 
 
  
@@ -20,6 +21,7 @@ const Profile = ({wallet}) => {
 
      async function fetchUserCards() {
       const cards = await getUserCards(wallet)
+      console.log(cards)
       
       const cardPromises = cards.map((cardId) =>
         pokemon.card.find(cardId).then((card) => card)
@@ -32,9 +34,11 @@ const Profile = ({wallet}) => {
         .catch((error) => {
           console.error('Error fetching user cards:', error);
         });
+      
     }
 
     fetchUserCards();
+    
   }, []);
   
 

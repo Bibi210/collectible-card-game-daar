@@ -7,19 +7,21 @@ const PopupBooster = ({ isVisible, onClose, children, set, wallet }) => {
   useEffect(() => {
     async function fetchBoosterCard() {
       const myMap = await getSetMap(wallet);
-      let id = ''
-      for (const name in myMap.values()) {
-        if (name === set.name) {
-          id = myMap.get(name)
-        }
-      }
-      const cards = openPack(wallet, id);
-      setBoosterCards(cards)
+      console.log(myMap)
 
-    }
+    //   let id = ''
+    //   for (const name in myMap.keys()) {
+    //     if (name === set.name) {
+    //       id = myMap.get(name)
+    //     }
+    //   }
+    //   const cards = openPack(wallet, id);
+    //   setBoosterCards(cards)
+
+     }
 
     fetchBoosterCard();
-    console.log(boosterCard)
+   
 
   }, [])
   return (
