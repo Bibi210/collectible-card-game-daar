@@ -9,20 +9,22 @@ const MarketPlace = ({wallet}) => {
     const [MarketPlaceCards, setMarketPlaceCards] = useState([])
     
     useEffect(() => {
-       function fetchMarketPlaceCards() {
-        const cardsList = getMarketPlaceCards();
-        const keyList = [];
+       async function  fetchMarketPlaceCards() {
+        const cards = await getMarketPlaceCards(wallet);
+        console.log(cards)
+      
+      //   const keyList = [];
     
-        cardsList.forEach(card => {
-          const cardKeys = [...card.keys()];
-          keyList.push(cardKeys[0]);
-        });
+      //   cardsList.forEach(card => {
+      //     const cardKeys = [...card.keys()];
+      //     keyList.push(cardKeys[0]);
+      //   });
     
-        setMarketPlaceCards(keyList);
-      }
+      //   setMarketPlaceCards(keyList);
+       }
     
       fetchMarketPlaceCards();
-      console.log(MarketPlaceCards)
+      // console.log(MarketPlaceCards)
     }, []);
     
 
