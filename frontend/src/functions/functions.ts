@@ -40,6 +40,7 @@ export async function openPack(wallet: {
     const { details, contract } = wallet
     const collectionContract = getContract<Collection>(await contract.getCollectionFromName(setId), CollectionAbi, details.signer)
     await collectionContract.buyAndOpenBooster()
+    console.log("done")
     return collectionContract.getLastBooster()
 }
 

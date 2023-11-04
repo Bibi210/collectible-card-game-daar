@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import './PopupBooster.css';
-import { openPack, getSetMap } from '../functions/functions'
+import { openPack, getAvalibleSet } from '../functions/functions'
 
 const PopupBooster = ({ isVisible, onClose, children, set, wallet }) => {
   const [boosterCard, setBoosterCards] = useState([]);
   useEffect(() => {
     async function fetchBoosterCard() {
-      const myMap = await getSetMap(wallet);
-      console.log(myMap)
-
-    //   let id = ''
-    //   for (const name in myMap.keys()) {
-    //     if (name === set.name) {
-    //       id = myMap.get(name)
-    //     }
-    //   }
-    //   const cards = openPack(wallet, id);
-    //   setBoosterCards(cards)
+      const SetList = await getAvalibleSet (wallet);
+      console.log(SetList)
+      console.log(set.id)
+     const cards = await openPack(wallet, set.id);
+     console.log(cards)
+    //  setBoosterCards(cards)
 
      }
 
-    fetchBoosterCard();
-   
+     fetchBoosterCard();
+    // console.log(boosterCard)
 
   }, [])
   return (
