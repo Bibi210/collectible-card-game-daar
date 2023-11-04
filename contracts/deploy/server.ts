@@ -5,6 +5,7 @@ import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import type { Main } from "$/Main"
 import type { Collection } from "$/Collection"
 import type { MarketPlace } from "$/MarketPlace"
+import type { Booster } from "$/Booster"
 
 
 let mainContract_GLB: Main;
@@ -22,7 +23,7 @@ async function getContract<T>(contractName: string, address: string): Promise<T>
 
 async function createCollections() {
     const sets = await PokemonTCG.getAllSets()
-    sets.splice(2, sets.length)
+    sets.splice(25, sets.length)
 
     const s = sets.map(async (set) => {
         const cards = await PokemonTCG.findCardsByQueries({ q: `set.id:${set.id}` });
@@ -34,8 +35,8 @@ async function createCollections() {
         const setAddr = await mainContract_GLB.getCollectionFromName(set.name)
         const CollectionContract = await getContract<Collection>("Collection", setAddr)
         const name = await CollectionContract.name()
-        const BoosterContract = await getContract<Collection>("Booster", await CollectionContract.getBooster())
-        BoosterContract.on('BoosterResult', (owner, result) => {
+        const BoosterContract = await getContract<Booster>("Booster", await CollectionContract.getBooster())
+        BoosterContract.on('BoosterResult', (owner: string, result: string[]) => {
             for (const card of result) {
                 console.log("card: ", card)
                 CollectionContract.safeMint(owner, card)
@@ -82,7 +83,6 @@ async function setEnv(mainContract: Contract, superAdmin: string, _hre: HardhatR
     superAdmin_GLB = superAdmin
     hre_GLB = _hre;
     await createCollections()
-    await sellCard()
 }
 
 export { setEnv } 
