@@ -8,6 +8,7 @@ import CollectionAbi from '@/abis/Collection.json'
 import BoosterAbi from '@/abis/Booster.json'
 import MarketPlaceAbi from '@/abis/MarketPlace.json'
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
+import { containerClasses } from '@mui/material'
 
 
 export function getContract<T>(addr: string, abi: ethers.ContractInterface, signer: ethers.providers.JsonRpcSigner | undefined) {
@@ -40,7 +41,6 @@ export async function openPack(wallet: {
     const { details, contract } = wallet
     const collectionContract = getContract<Collection>(await contract.getCollectionFromName(setId), CollectionAbi, details.signer)
     await collectionContract.buyAndOpenBooster()
-    console.log("done")
     return collectionContract.getLastBooster()
 }
 
