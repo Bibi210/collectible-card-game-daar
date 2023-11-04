@@ -13,6 +13,8 @@ contract Booster is ERC20, ERC20Burnable {
   Collection public referenceCollection;
   MersenneTwister public rng = new MersenneTwister();
 
+  mapping(address => string[]) public lastBooster;
+
   constructor(
     string memory name,
     string memory symbol,
@@ -25,7 +27,7 @@ contract Booster is ERC20, ERC20Burnable {
     _mint(to, amount);
   }
 
-  function openBooster(address owner) public returns (string[] memory) {
+  function openBooster(address owner) public {
     _burn(owner, 1);
     uint256[] memory randValues = rng.getNRandValues(
       CARD_PER_BOOSTER,
@@ -37,6 +39,12 @@ contract Booster is ERC20, ERC20Burnable {
       uris[i] = referenceCollection.UNIQ_CARDS(wonCard);
     }
     emit BoosterResult(owner, uris);
-    return uris;
+    lastBooster[owner] = uris;
+  }
+
+  function getLastBooster(
+    address owner
+  ) external view returns (string[] memory) {
+    return lastBooster[owner];
   }
 }

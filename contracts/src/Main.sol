@@ -54,4 +54,12 @@ contract Main is Ownable {
   function getNbCollections() external view returns (uint) {
     return nbCollections;
   }
+
+  function getAllCollectionNames() external view returns (string[] memory) {
+    string[] memory names = new string[](nbCollections);
+    for (uint i = 0; i < nbCollections; i++)
+      names[i] = getCollectionFromId(i).name();
+
+    return names;
+  }
 }
