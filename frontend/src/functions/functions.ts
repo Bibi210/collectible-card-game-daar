@@ -90,11 +90,13 @@ export async function addToMarketplace(wallet: {
     details: ethereum.Details;
     contract: Main;
 }, cardId: string, AcceptedCards: string[]) {
+    console.log(AcceptedCards)
     const { details, contract } = wallet;
     const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
     uriToCollectionId(wallet, cardId).then((collectionId) => {
         MarketPlace.sellCard(collectionId, cardId, AcceptedCards)
     })
+    console.log("fin")
 }
 
 export async function removeFromMarketplace(wallet: {

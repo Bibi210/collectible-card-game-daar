@@ -68,7 +68,7 @@ const Profile = ({wallet}) => {
         {myCards.map((card, index) => (
           <div key={index} className="card-container">
             <img src={card.images.small} alt="Pokemon Card" onClick={() => showPopup(index)} />
-            <Popup isVisible={cardPopups[index]} onClose={hidePopup} card={card} >
+            <Popup isVisible={cardPopups[index]} onClose={hidePopup} card={card} wallet={wallet}>
               {/* Additional content for the popup */}
             </Popup>
           </div>
