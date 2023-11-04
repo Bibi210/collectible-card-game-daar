@@ -28,13 +28,12 @@ async function createCollections() {
     const s = sets.map(async (set) => {
         const cards = await PokemonTCG.findCardsByQueries({ q: `set.id:${set.id}` });
         const cardsIDS = cards.map(card => card.id)
-        await mainContract_GLB.createCollection(set.name, set.id, cardsIDS)
+        await mainContract_GLB.createCollection(set.id, set.name, cardsIDS)
     })
     await Promise.all(s)
     for (const set of sets) {
-        const setAddr = await mainContract_GLB.getCollectionFromName(set.name)
+        const setAddr = await mainContract_GLB.getCollectionFromName(set.id)
         const CollectionContract = await getContract<Collection>("Collection", setAddr)
-        const name = await CollectionContract.name()
         const BoosterContract = await getContract<Booster>("Booster", await CollectionContract.getBooster())
         BoosterContract.on('BoosterResult', (owner: string, result: string[]) => {
             for (const card of result) {
@@ -42,6 +41,7 @@ async function createCollections() {
                 CollectionContract.safeMint(owner, card)
             }
         })
+        const name = await CollectionContract.symbol()
         console.log("CollectionContract: ", name)
     }
 
@@ -65,7 +65,7 @@ async function sellCard() {
     const firstSet = await mainContract_GLB.getCollectionFromId(0)
     const CollectionContract = await getContract<Collection>("Collection", firstSet)
     const CollectionName = await CollectionContract.name()
-    const firstCardRequest = await PokemonTCG.findCardsByQueries({ q: `set.name:${CollectionName}` });
+    const firstCardRequest = await PokemonTCG.findCardsByQueries({ q: `set.id:${CollectionName}` });
     const firstCard = firstCardRequest[0]
 
     CollectionContract.safeMint(superAdmin_GLB, firstCard.id)

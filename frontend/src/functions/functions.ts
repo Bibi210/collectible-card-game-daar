@@ -36,32 +36,19 @@ export async function getUserCards(wallet: {
 export async function openPack(wallet: {
     details: ethereum.Details;
     contract: Main;
-}, id: number) {
+}, setId: string) {
     const { details, contract } = wallet
-    const collectionAddr = await contract.getCollectionFromId(id)
-    const collectionContract = getContract<Collection>(collectionAddr, CollectionAbi, details.signer)
-    const boosterAddr = await collectionContract.getBooster()
-    const boosterContract = getContract<Booster>(boosterAddr, BoosterAbi, details.signer)
-    boosterContract.on('BoosterResult', (adr: string, cards: string[]) => {
-        console.log(adr, cards)
-    })
+    const collectionContract = getContract<Collection>(await contract.getCollectionFromName(setId), CollectionAbi, details.signer)
     await collectionContract.buyAndOpenBooster()
     return collectionContract.getLastBooster()
 }
 
-export async function getSetMap(wallet: {
+export async function getAvalibleSet(wallet: {
     details: ethereum.Details;
     contract: Main;
 }) {
     const { details, contract } = wallet
-    const nbSets = await contract.getNbCollections()
-    let out: Map<string, number> = new Map()
-    for (let i = 0; i < nbSets; i++) {
-        const collectionContract = getContract<Collection>(await contract.getCollectionFromId(i), CollectionAbi, details.signer)
-        const name = await collectionContract.name()
-        out.set(name, i)
-    }
-    return out
+    return contract.getAllCollectionNames()
 }
 
 
@@ -77,7 +64,7 @@ export async function uriToCollectionId(wallet: {
     contract: Main;
 }, uri: string) {
     const card = await PokemonTCG.findCardByID(uri)
-    const set = card.set.name
+    const set = card.set.id
     return wallet.contract.getCollectionIdFromName(set)
 }
 
