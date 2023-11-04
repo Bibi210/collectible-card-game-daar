@@ -1,11 +1,9 @@
 import * as ethereum from '../lib/ethereum'
 import type { Main } from '../../../typechain/src/Main'
 import type { Collection } from '../../../typechain/src/Collection'
-import type { Booster } from '../../../typechain/src/Booster'
 import type { MarketPlace } from '../../../typechain/src/MarketPlace'
 import { ethers } from 'ethers'
 import CollectionAbi from '@/abis/Collection.json'
-import BoosterAbi from '@/abis/Booster.json'
 import MarketPlaceAbi from '@/abis/MarketPlace.json'
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import { containerClasses } from '@mui/material'
@@ -49,7 +47,7 @@ export async function getAvalibleSet(wallet: {
     contract: Main;
 }) {
     const { details, contract } = wallet
-    return contract.getAllCollectionNames()
+    return await contract.getAllCollectionNames()
 }
 
 
