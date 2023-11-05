@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './Popup.css';
 import TabContext from '@mui/lab/TabContext';
 import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import TabList from '@mui/lab/TabList';
 import pokemon from 'pokemontcgsdk';
 import { Checkbox, Button } from '@mui/material';
-import { addToMarketplace , getAvalibleSet } from '../functions/functions'
+import { addToMarketplace, getAvalibleSet } from '../functions/functions'
 
 pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
-function Popup({ isVisible, onClose, children, card , wallet}) {
+function Popup({ isVisible, onClose, children, card, wallet }) {
   const [pokemonCards, setPokemonCards] = useState([]);
   const [pokemonSets, setPokemonSets] = useState([]);
   const [value, setValue] = React.useState('1');
@@ -42,6 +41,7 @@ function Popup({ isVisible, onClose, children, card , wallet}) {
       try {
         const cards = await pokemon.card.where({ pageSize: 100 });
         setPokemonCards(cards.data);
+
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
@@ -85,53 +85,53 @@ function Popup({ isVisible, onClose, children, card , wallet}) {
                 </button>
               </Box>
               <TabPanel className="panel" value="1">
-             
-  {children}
-  <img className='cardImage' src={card.images.small} />
-  <div className="card-details">
-    <h3>Card Details</h3>
-    <p>
-      <strong>Supertype:</strong> {card.supertype}
-    </p>
-    <p>
-      <strong>Subtypes:</strong> {card.subtypes ? card.subtypes.join(", ") : "N/A"}
-    </p>
-    <p>
-      <strong>HP:</strong> {card.hp}
-    </p>
-    <p>
-      <strong>Types:</strong> {card.types ? card.types.join(", ") : "N/A"}
-    </p>
-    <p>
-      <strong>Rules:</strong> {card.rules ? card.rules.join(", ") : "N/A"}
-    </p>
-    <h3>Attacks</h3>
-    <ul>
-      {card.attacks ? (
-        card.attacks.map((attack, index) => (
-          <li key={index}>
-            <strong>{attack.name}</strong> - {attack.text}
-          </li>
-        ))
-      ) : (
-        <li>No attacks available.</li>
-      )}
-    </ul>
-    <h3>Weaknesses</h3>
-    <ul>
-      {card.weaknesses ? (
-        card.weaknesses.map((weakness, index) => (
-          <li key={index}>
-            <strong>Type:</strong> {weakness.type}, <strong>Value:</strong> {weakness.value}
-          </li>
-        ))
-      ) : (
-        <li>No weaknesses available.</li>
-      )}
-    </ul>
-    <h3>Retreat Cost</h3>
-    <p>{card.retreatCost ? card.retreatCost.join(", ") : "N/A"}</p>
-  </div>
+
+                {children}
+                <img className='cardImage' src={card.images.small} />
+                <div className="card-details">
+                  <h3>Card Details</h3>
+                  <p>
+                    <strong>Supertype:</strong> {card.supertype}
+                  </p>
+                  <p>
+                    <strong>Subtypes:</strong> {card.subtypes ? card.subtypes.join(", ") : "N/A"}
+                  </p>
+                  <p>
+                    <strong>HP:</strong> {card.hp}
+                  </p>
+                  <p>
+                    <strong>Types:</strong> {card.types ? card.types.join(", ") : "N/A"}
+                  </p>
+                  <p>
+                    <strong>Rules:</strong> {card.rules ? card.rules.join(", ") : "N/A"}
+                  </p>
+                  <h3>Attacks</h3>
+                  <ul>
+                    {card.attacks ? (
+                      card.attacks.map((attack, index) => (
+                        <li key={index}>
+                          <strong>{attack.name}</strong> - {attack.text}
+                        </li>
+                      ))
+                    ) : (
+                      <li>No attacks available.</li>
+                    )}
+                  </ul>
+                  <h3>Weaknesses</h3>
+                  <ul>
+                    {card.weaknesses ? (
+                      card.weaknesses.map((weakness, index) => (
+                        <li key={index}>
+                          <strong>Type:</strong> {weakness.type}, <strong>Value:</strong> {weakness.value}
+                        </li>
+                      ))
+                    ) : (
+                      <li>No weaknesses available.</li>
+                    )}
+                  </ul>
+                  <h3>Retreat Cost</h3>
+                  <p>{card.retreatCost ? card.retreatCost.join(", ") : "N/A"}</p>
+                </div>
               </TabPanel>
               <div className="panel2">
                 <TabPanel className="panel" value="2">
@@ -186,9 +186,7 @@ function Popup({ isVisible, onClose, children, card , wallet}) {
                   <div className="add-to-marketplace-button">
                     <Button
                       variant="contained"
-                      onClick={() => {
-                        addToMarketplace(wallet,card.id, selectedCards);
-                      }}
+                      onClick={() => addToMarketplace(wallet, card.id, selectedCards)}
                     >
                       Add to Marketplace
                     </Button>

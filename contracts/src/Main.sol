@@ -62,4 +62,14 @@ contract Main is Ownable {
 
     return names;
   }
+
+  function getAllCardsFromBlockChain() external view returns (string[] memory) {
+    string[] memory cards = new string[](nbCollections);
+    for (uint i = 0; i < nbCollections; i++) {
+      Collection collection = getCollectionFromId(i);
+      for (uint j = 0; j < collection.totalSupply(); j++)
+        cards[i] = collection.tokenURI(j);
+    }
+    return cards;
+  }
 }
