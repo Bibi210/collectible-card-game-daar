@@ -76,37 +76,37 @@ contract MarketPlace is Ownable {
     string calldata uri,
     uint256 collectionId
   ) external {
-    Trade memory usedCard = Trade(uri, collectionId, msg.sender);
-    Card storage card = spots[spotId];
-    if (card.done) revert("Card already sold");
+    Trade memory buyerCard = Trade(uri, collectionId, msg.sender);
+    Card storage inMarketCard = spots[spotId];
+    if (inMarketCard.done) revert("Card already sold");
 
-    Collection soldCollection = _idToCollection[card.collectionId];
-    Collection boughtCollection = _idToCollection[usedCard.collectionId];
+    Collection inMarketCollection = _idToCollection[inMarketCard.collectionId];
+    Collection fromBuyerCollection = _idToCollection[buyerCard.collectionId];
 
-    uint256 used = boughtCollection.firstTokenOwned(
-      usedCard.owner,
-      usedCard.uri
+    uint256 buyerTokenId = fromBuyerCollection.firstTokenOwned(
+      buyerCard.owner,
+      buyerCard.uri
     );
 
     aliveTrades--;
-    card.done = true;
+    inMarketCard.done = true;
 
-    uint256 bought = soldCollection.firstTokenOwned(card.owner, card.id);
+    uint256 bought = inMarketCollection.firstTokenOwned(inMarketCard.owner, inMarketCard.id);
 
     ValidateTrade memory buyer = ValidateTrade(
-      used,
-      usedCard.collectionId,
+      buyerTokenId,
+      buyerCard.collectionId,
       msg.sender
     );
 
     ValidateTrade memory seller = ValidateTrade(
       bought,
-      card.collectionId,
-      card.owner
+      inMarketCard.collectionId,
+      inMarketCard.owner
     );
 
     emit Exchange(buyer, seller);
-    card.acceptedCurrency = usedCard;
+    inMarketCard.acceptedCurrency = buyerCard;
   }
 
   function seeMarketPlace() external view returns (Card[] memory) {

@@ -54,7 +54,7 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
       if (compare(tokenURI(tokenOfOwnerByIndex(owner, i)), card))
         return tokenOfOwnerByIndex(owner, i);
     }
-    revert("Card not owned");
+    revert(string.concat("Card not owned: ", card));
   }
 
   function getNbUniqCards() external view returns (uint256) {
