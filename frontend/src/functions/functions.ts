@@ -121,6 +121,9 @@ export async function buyFromMarketplace(wallet: {
 }, spot: CardStruct, currency: string) {
     const { details, contract } = wallet;
     const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
-    console.log("Buy Args : ", wallet, spot, currency)
-    MarketPlace.buyCard(spot.spotId, currency, await contract.getCollectionIdFromName(currency))
+    console.log("wallet: ", wallet)
+    console.log("spot: ", spot)
+    console.log("currency: ", currency)
+    const collectionID = await uriToCollectionId(wallet, spot.uri)
+    MarketPlace.buyCard(spot.spotId, currency, collectionID)
 }

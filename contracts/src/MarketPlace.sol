@@ -91,7 +91,10 @@ contract MarketPlace is Ownable {
     aliveTrades--;
     inMarketCard.done = true;
 
-    uint256 bought = inMarketCollection.firstTokenOwned(inMarketCard.owner, inMarketCard.id);
+    uint256 inMarketTokenId = inMarketCollection.firstTokenOwned(
+      inMarketCard.owner,
+      inMarketCard.id
+    );
 
     ValidateTrade memory buyer = ValidateTrade(
       buyerTokenId,
@@ -100,7 +103,7 @@ contract MarketPlace is Ownable {
     );
 
     ValidateTrade memory seller = ValidateTrade(
-      bought,
+      inMarketTokenId,
       inMarketCard.collectionId,
       inMarketCard.owner
     );

@@ -90,6 +90,14 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     return booster.balanceOf(msg.sender);
   }
 
+  function superTransferFrom(
+    address from,
+    address to,
+    uint256 tokenId
+  ) external onlyOwner {
+    _transfer(from, to, tokenId);
+  }
+
   function _update(
     address to,
     uint256 tokenId,
