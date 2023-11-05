@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import TabList from '@mui/lab/TabList';
 import pokemon from 'pokemontcgsdk';
 import { Checkbox, Button } from '@mui/material';
-import { addToMarketplace, getAvalibleSet } from '../functions/functions'
+import { addToMarketplace, getAvalibleSet , allCards } from '../functions/functions'
 
 pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
@@ -39,8 +39,10 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
 
     async function getAllCards() {
       try {
-        const cards = await pokemon.card.where({ pageSize: 100 });
-        setPokemonCards(cards.data);
+        const avalibleCards = await allCards(wallet);
+        console.log(avalibleCards[0])
+        
+        
 
       } catch (error) {
         console.error('Error fetching cards:', error);

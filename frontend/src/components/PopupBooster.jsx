@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './PopupBooster.css';
 
 import pokemon from 'pokemontcgsdk';
-pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
+pokemon.configure({ apiKey: '2656b87d-c120-4542-b23b-f98c7e1df25a' });
 
 const PopupBooster = ({ isVisible, onClose, set, booster }) => {
   
