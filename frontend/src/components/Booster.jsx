@@ -11,7 +11,8 @@ import PopupBooster from './PopupBooster';
 import { getAvalibleSet } from '@/functions/functions';
 import { openPack } from '../functions/functions';
 
-pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
+pokemon.configure({ apiKey: '2656b87d-c120-4542-b23b-f98c7e1df25a' });
+
 
 
 const Booster = ({ wallet }) => {
@@ -58,6 +59,7 @@ const Booster = ({ wallet }) => {
   const [isLoading, setIsLoading] = useState(false);
   const handleOpenPack = async (set, index) => {
     try {
+      console.log(set.id)
       setIsLoading(true);
       const result = await openPack(wallet, set.id);
 

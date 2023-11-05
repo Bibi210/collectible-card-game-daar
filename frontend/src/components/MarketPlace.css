@@ -44,6 +44,8 @@
 .AcceptedCard-img{
     height: 93%;
     width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
 .acceptedCards{
@@ -68,4 +70,9 @@
     height: 55px;
     width: 200px;
     border: none;
+
+  }
+
+  .check{
+    margin-right: 10px;
   }
