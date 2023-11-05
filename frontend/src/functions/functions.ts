@@ -119,8 +119,8 @@ export async function removeFromMarketplace(wallet: {
 export async function buyFromMarketplace(wallet: {
     details: ethereum.Details;
     contract: Main;
-}, spot: CardStruct, currency: string) {
+}, spot: CardStruct, currency: number) {
     const { details, contract } = wallet;
-    const MarketPlace = await getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
-    MarketPlace.buyCard(spot.spotId, currency, await contract.getCollectionIdFromName(currency))
+    const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    MarketPlace.buyCard(spot.spotId, spot.acceptedCurrencies[currency], await contract.getCollectionIdFromName(spot.acceptedCurrencies[currency]))
 }
