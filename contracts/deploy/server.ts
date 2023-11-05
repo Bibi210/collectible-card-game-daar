@@ -48,13 +48,13 @@ async function createCollections() {
     MarketPlaceContract.on('Exchange', (card: MarketPlace.ValidateTradeStruct, trade: MarketPlace.ValidateTradeStruct) => {
         mainContract_GLB.getCollectionFromId(card.collectionId).then((collectionAddr) => {
             getContract<Collection>("Collection", collectionAddr).then((CollectionContract) => {
-                CollectionContract.transferFrom(card.owner, trade.owner, card.tokenId)
+                CollectionContract.superTransferFrom(card.owner, trade.owner, card.tokenId)
             })
         })
 
         mainContract_GLB.getCollectionFromId(trade.collectionId).then((collectionAddr) => {
             getContract<Collection>("Collection", collectionAddr).then((CollectionContract) => {
-                CollectionContract.transferFrom(trade.owner, card.owner, trade.tokenId)
+                CollectionContract.superTransferFrom(trade.owner, card.owner, trade.tokenId)
             })
         })
     })
@@ -73,6 +73,7 @@ async function sellCard() {
     await MarketPlaceContract.sellCard(firstCard.id, 0, [firstCard.id])
     console.log("MarketPlace :" + await MarketPlaceContract.seeMarketPlace())
     await MarketPlaceContract.buyCard(0, firstCard.id, 0)
+    console.log("MarketPlace :" + await MarketPlaceContract.seeMarketPlace())
 }
 
 
@@ -82,7 +83,6 @@ async function setEnv(mainContract: Contract, superAdmin: string, _hre: HardhatR
     superAdmin_GLB = superAdmin
     hre_GLB = _hre;
     await createCollections()
-    sellCard()
 }
 
 export { setEnv } 

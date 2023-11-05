@@ -112,7 +112,7 @@ const MarketPlace = ({ wallet }) => {
       <div className="grid-container" id="MyPokemonCards">
         {MarketPlaceCards !== null ? (
           MarketPlaceCards.map((card, index) => (
-            <div key={index} className="card-container" onClick={() => { console.log("Selected : ",card); openPopup(card) }}>
+            <div key={index} className="card-container" onClick={() => { console.log("Selected : ", card); openPopup(card) }}>
               <img src={card.images.small} alt={card.name} />
             </div>
           ))
