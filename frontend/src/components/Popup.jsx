@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import TabList from '@mui/lab/TabList';
 import pokemon from 'pokemontcgsdk';
 import { Checkbox, Button } from '@mui/material';
-import { addToMarketplace } from '../functions/functions'
+import { addToMarketplace , getAvalibleSet } from '../functions/functions'
 
 pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
@@ -29,8 +29,10 @@ function Popup({ isVisible, onClose, children, card , wallet}) {
   useEffect(() => {
     async function getAllSets() {
       try {
-        const sets = await pokemon.set.where({ pageSize: 50, page: 2 });
-        setPokemonSets(sets.data);
+        const avalibleSets = await getAvalibleSet(wallet);
+        const setPromises = avalibleSets.map(set => pokemon.set.find(set))
+        const sets = await Promise.all(setPromises);
+        setPokemonSets(sets);
       } catch (error) {
         console.error('Error fetching sets:', error);
       }
