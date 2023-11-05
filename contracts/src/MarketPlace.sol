@@ -5,6 +5,11 @@ import "./Collection.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MarketPlace is Ownable {
+  constructor(address owner) Ownable(owner) {
+    tradesCount = 0;
+    aliveTrades = 0;
+  }
+
   mapping(uint => Collection) private _idToCollection;
   event Exchange(ValidateTrade soldCard, ValidateTrade acceptedTrade);
   struct Card {
@@ -32,11 +37,6 @@ contract MarketPlace is Ownable {
   uint256 public aliveTrades = 0;
   mapping(uint256 => Card) private spots;
 
-  constructor(address owner) Ownable(owner) {
-    tradesCount = 0;
-    aliveTrades = 0;
-  }
-
   function addCollection(
     uint256 collectionId,
     Collection collection
@@ -49,16 +49,15 @@ contract MarketPlace is Ownable {
     uint256 collectionId,
     string[] calldata acceptedCurrency
   ) external {
-    Card storage card = spots[tradesCount];
-    card.id = uri;
-    card.collectionId = collectionId;
-    card.acceptedCurrencies = new string[](acceptedCurrency.length);
-    for (uint256 i = 0; i < acceptedCurrency.length; i++) 
-      card.acceptedCurrencies[i] = acceptedCurrency[i];
-    
-    card.owner = msg.sender;
-    card.done = false;
-    card.spotId = tradesCount;
+    spots[tradesCount] = Card(
+      uri,
+      collectionId,
+      acceptedCurrency,
+      msg.sender,
+      false,
+      Trade("", 0, address(0)),
+      tradesCount
+    );
 
     aliveTrades++;
     tradesCount++;

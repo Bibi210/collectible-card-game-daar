@@ -38,8 +38,9 @@ contract Booster is ERC20, ERC20Burnable {
       uint256 wonCard = randValues[i];
       uris[i] = referenceCollection.UNIQ_CARDS(wonCard);
     }
-    emit BoosterResult(owner, uris);
     lastBooster[owner] = uris;
+    emit BoosterResult(owner, uris);
+    return;
   }
 
   function getLastBooster(
