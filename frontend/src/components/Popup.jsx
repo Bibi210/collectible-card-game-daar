@@ -13,6 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'; // Heart icon
 import SportsMmaIcon from '@mui/icons-material/SportsMma'; // Sword icon
 
+
 pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
 function Popup({ isVisible, onClose, children, card, wallet }) {
@@ -44,16 +45,9 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
     async function getAllCards() {
       try {
         const avalibleCards = await allCards(wallet);
-<<<<<<< Updated upstream
         const cardPromises = avalibleCards.map(card => pokemon.card.find(card))
         const cards = await Promise.all(cardPromises);
         setPokemonCards(cards);
-=======
-        console.log(avalibleCards[0])
-
-
-
->>>>>>> Stashed changes
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
@@ -101,28 +95,28 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
                 {children}
                 <img className='cardImage' src={card.images.small} />
                 <div className="card-details">
-                  <h3>Card Details <InfoIcon fontSize="small" /></h3>
-                  <p>
+                  <h3>Card Details <InfoIcon fontSize="small" className="icon" /></h3>
+                  <p className='black'>
                     <strong>Supertype:</strong> {card.supertype}
                   </p>
-                  <p>
+                  <p className='black '>
                     <strong>Subtypes:</strong> {card.subtypes ? card.subtypes.join(", ") : "N/A"}
                   </p>
-                  <p>
-                    <FitnessCenterIcon fontSize="small" /> <strong>HP:</strong> {card.hp}
+                  <p className='black '>
+                    <FitnessCenterIcon fontSize="small" className="heart-icon" /> <strong>HP:</strong> {card.hp}
                   </p>
-                  <p>
-                    <SportsMmaIcon fontSize="small" /> <strong>Types:</strong> {card.types ? card.types.join(", ") : "N/A"}
+                  <p className='black '>
+                    <SportsMmaIcon fontSize="small" className="sword-icon" /> <strong>Types:</strong> {card.types ? card.types.join(", ") : "N/A"}
                   </p>
-                  <p>
-                    <strong>Rules:</strong> {card.rules ? card.rules.join(", ") : "N/A"} <ArrowForwardIcon fontSize="small" />
+                  <p className='black '>
+                    <strong>Rules:</strong> {card.rules ? card.rules.join(", ") : "N/A"} <ArrowForwardIcon fontSize="small" className="icon" />
                   </p>
                   <h3>Attacks</h3>
                   <ul>
                     {card.attacks ? (
                       card.attacks.map((attack, index) => (
                         <li key={index}>
-                          <SportsMmaIcon fontSize="small" /> <strong>{attack.name}</strong> - {attack.text}
+                          <SportsMmaIcon fontSize="small" className="sword-icon" /> <strong>{attack.name}</strong> - {attack.text}
                         </li>
                       ))
                     ) : (
@@ -134,7 +128,7 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
                     {card.weaknesses ? (
                       card.weaknesses.map((weakness, index) => (
                         <li key={index}>
-                          <FitnessCenterIcon fontSize="small" /> <strong>Type:</strong> {weakness.type}, <strong>Value:</strong> {weakness.value}
+                          <FitnessCenterIcon fontSize="small" className="heart-icon" /> <strong>Type:</strong> {weakness.type}, <strong>Value:</strong> {weakness.value}
                         </li>
                       ))
                     ) : (
@@ -142,7 +136,8 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
                     )}
                   </ul>
                   <h3>Retreat Cost</h3>
-                  <p>{card.retreatCost ? card.retreatCost.join(", ") : "N/A"} <ArrowForwardIcon fontSize="small" /></p>
+                  <p className='black '>{card.retreatCost ? card.retreatCost.join(", ") : "N/A"} <ArrowForwardIcon fontSize="small" className="icon" />
+                  </p>
                 </div>
               </TabPanel>
               <div className="panel2">
