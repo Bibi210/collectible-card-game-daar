@@ -22,11 +22,11 @@ const Booster = ({ wallet }) => {
       try {
         const avalibleSets = await getAvalibleSet(wallet);
         console.log(avalibleSets)
-        const setPromises=avalibleSets.map(set=>pokemon.set.find(set))
+        const setPromises = avalibleSets.map(set => pokemon.set.find(set))
         const sets = await Promise.all(setPromises);
         console.log(sets)
         setPokemonSets(sets);
-       
+
       } catch (error) {
         console.error('Error fetching sets:', error);
       }
@@ -52,43 +52,39 @@ const Booster = ({ wallet }) => {
     setBoosterPopups(boosterPopups.map(() => false));
   };
 
-/*open pack */
-const [lastBooster, setLastBooster] = useState(null);
+  /*open pack */
+  const [lastBooster, setLastBooster] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-const handleOpenPack = async (set,index) => {
-  try {
-    setIsLoading(true);
-    const result = await openPack(wallet, set.id);
+  const handleOpenPack = async (set, index) => {
+    try {
+      setIsLoading(true);
+      const result = await openPack(wallet, set.id);
 
-    console.log('Last booster:', result);
-    const BoosterPromises = result.map(id => pokemon.card.find(id))
-    const booster = await Promise.all(BoosterPromises);
-    console.log(booster)
-    setLastBooster(booster);
-    
-    showPopup(index)
+      console.log('Last booster:', result);
+      const BoosterPromises = result.map(id => pokemon.card.find(id))
+      const booster = await Promise.all(BoosterPromises);
+      console.log(booster)
+      setLastBooster(booster);
 
-    // Assuming that result contains an array of cards, you can log the cards
-    result.cards.forEach((card, index) => {
-      console.log(`Card ${index + 1}:`, card);
-    });
+      showPopup(index)
 
-    setIsLoading(false);
-  } catch (err) {
-    setError(err);
-    setIsLoading(false);
-    console.error('Error opening the booster pack:', err);
-  }
-};
-useEffect(() => {
- 
+
+      setIsLoading(false);
+    } catch (err) {
+      setError(err);
+      setIsLoading(false);
+      console.error('Error opening the booster pack:', err);
+    }
+  };
+  useEffect(() => {
+
     handleOpenPack();
     console.log(lastBooster)
 
-  
-}, []);
-/**************************** */
+
+  }, []);
+  /**************************** */
 
 
 
@@ -105,29 +101,29 @@ useEffect(() => {
         {pokemonSets.map((Set, index) => (
           <><Card className="setCard" sx={{ maxWidth: 345 }} >
             <PopupBooster isVisible={boosterPopups[index]} onClose={hidePopup} set={Set} booster={lastBooster} >
-                {/* Additional content for the popup */}
-              </PopupBooster>
-              <CardMedia className='cardImg'
-                component="img"
-                height="140"
-                image={Set.images.logo}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {Set.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Buy a  {Set.name} booster and discover the cards.
-                </Typography>
-                <CardActions>
-               
-                          <Button size="small" onClick={() => handleOpenPack(Set,index)}>Open booster</Button>
+              {/* Additional content for the popup */}
+            </PopupBooster>
+            <CardMedia className='cardImg'
+              component="img"
+              height="140"
+              image={Set.images.logo}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {Set.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Buy a  {Set.name} booster and discover the cards.
+              </Typography>
+              <CardActions>
+
+                <Button size="small" onClick={() => handleOpenPack(Set, index)}>Open booster</Button>
 
 
-                
-                </CardActions>
-              </CardContent>
-            
+
+              </CardActions>
+            </CardContent>
+
           </Card></>
         ))}
       </div>

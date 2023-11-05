@@ -67,23 +67,48 @@ export async function uriToCollectionId(wallet: {
     return wallet.contract.getCollectionIdFromName(set)
 }
 
+// export async function getMarketPlaceCards(wallet: {
+//     details: ethereum.Details;
+//     contract: Main;
+// }): Promise<CardStruct[]> {
+//     const { details, contract } = wallet;
+//     const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+//     const market = await MarketPlace.seeMarketPlace()
+//     const cards = market.map((card) => {
+//         return {
+//             uri: card.id,
+//             acceptedCurrencies: card.acceptedCurrencies,
+//             owner: card.owner,
+//             spotId: card.spotId
+//         }
+//     })
+//     return cards
+// }
+
 export async function getMarketPlaceCards(wallet: {
     details: ethereum.Details;
     contract: Main;
-}): Promise<CardStruct[]> {
-    const { details, contract } = wallet;
-    const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
-    const market = await MarketPlace.seeMarketPlace()
-    const cards = market.map((card) => {
-        return {
-            uri: card.id,
-            acceptedCurrencies: card.acceptedCurrencies,
-            owner: card.owner,
-            spotId: card.spotId
+     }) {
+    // Sample data for testing
+    const sampleCards = [
+        {
+            uri: "sv3pt5-8",
+            acceptedCurrencies: ["sv3pt5-9" , "sv3pt5-10" , "sv3pt5-11" , "sv3pt5-12"],
+            owner: "0xOwner1",
+            spotId: 1
+        },
+        {
+            uri: "sv3pt5-2",
+            acceptedCurrencies: ["sv3pt5-3","sv3pt5-4"],
+            owner: "0xOwner2",
+            spotId: 2
         }
-    })
-    return cards
+        // Add more sample cards here if needed
+    ];
+
+    return sampleCards;
 }
+
 
 
 export async function addToMarketplace(wallet: {

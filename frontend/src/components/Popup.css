@@ -109,7 +109,7 @@
   grid-column: 2;
   grid-row: 2;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Display three cards per row */
+  grid-template-columns: repeat(4, 1fr); 
   gap: 40px;
   margin-top: -40%;
   overflow: auto;
@@ -125,7 +125,8 @@
 }
 
 .card-container-popup img {
-  max-width: 100%; /* Adjust the width as needed to fit three cards per row */
+  height: 93%;
+  width: 90%;
 }
 
 .search-wrapper{

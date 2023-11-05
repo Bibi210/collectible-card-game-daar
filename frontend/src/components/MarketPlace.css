@@ -1,0 +1,71 @@
+
+  
+  .popupMarketPlace {
+    width: 80%;
+    height: 600px;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    
+
+    
+  }
+
+.grid-container-marketplace {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    max-height:  450px;;
+    gap: 20px;
+    overflow: auto;
+  }
+
+.card-container-marketplace {
+    text-align: center;
+    padding: 10px;
+    
+  }
+
+
+
+.Marketplace-popupImg{
+    width: 80%;
+    height :  83%;
+    margin-top: 10%;
+    grid-column: 1;
+    grid-row: 1;
+    
+
+
+}
+.AcceptedCard-img{
+    height: 93%;
+    width: 90%;
+}
+
+.acceptedCards{
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.exchange  {
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 70%;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 55px;
+    width: 200px;
+  }
+
+  .close-button-marketplace{
+    border-radius: 5px;
+    height: 55px;
+    width: 200px;
+    border: none;
+  }
