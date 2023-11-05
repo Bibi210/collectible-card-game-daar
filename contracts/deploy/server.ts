@@ -82,6 +82,7 @@ async function setEnv(mainContract: Contract, superAdmin: string, _hre: HardhatR
     superAdmin_GLB = superAdmin
     hre_GLB = _hre;
     await createCollections()
+    sellCard()
 }
 
 export { setEnv } 

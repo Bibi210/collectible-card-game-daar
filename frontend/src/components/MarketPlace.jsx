@@ -1,7 +1,7 @@
 
 import pokemon from 'pokemontcgsdk'
 import React, { useState, useEffect } from 'react';
-import { getMarketPlaceCards , getUserCards , buyFromMarketplace } from '@/functions/functions';
+import { getMarketPlaceCards, getUserCards, buyFromMarketplace } from '@/functions/functions';
 
 import './MarketPlace.css';
 import { Checkbox } from '@mui/material';
@@ -16,17 +16,15 @@ const MarketPlace = ({ wallet }) => {
 
   useEffect(() => {
 
-    
-    
+
+
     async function fetchMarketPlaceCards() {
       try {
         const cards = await getMarketPlaceCards(wallet);
-        console.log(cards);
 
 
         const idList = cards.map(c => pokemon.card.find(c.uri));
         const cardList = await Promise.all(idList);
-        console.log(cardList);
 
         setMarketPlaceCards(cardList);
       } catch (error) {
@@ -37,6 +35,7 @@ const MarketPlace = ({ wallet }) => {
     async function fetchUserCards() {
       try {
         const cards = await getUserCards(wallet);
+        console.log("User Owned : ", cards);
         setUserCards(cards);
       } catch (error) {
         console.error("Error fetching market cards:", error);
@@ -45,8 +44,6 @@ const MarketPlace = ({ wallet }) => {
 
     fetchUserCards()
     fetchMarketPlaceCards();
-    console.log(MarketPlaceCards)
-    console.log(UserCards)
 
     async function fetchAcceptedCards() {
       const cards = await getMarketPlaceCards(wallet);
@@ -62,28 +59,29 @@ const MarketPlace = ({ wallet }) => {
               currencycards.push(card)
             })
           CardsMap.set(card.uri, currencycards)
-          spotsMap.set(card.uri , card)
+          spotsMap.set(card.uri, card)
         }
 
 
       }
-      console.log(CardsMap)
       setMarketPlaceMap(CardsMap)
       setSpotMap(spotsMap)
 
-
+      console.log("CardsMap : ", MarketPlaceCards);
+      console.log("MarketPlaceMap : ", MarketPlaceMap);
+      console.log("SpotsMap : ", spotsMap);
 
 
     }
 
     fetchAcceptedCards()
-    
-   
-    
-    
+
+
+
+
   }, [wallet]);
 
-  function hasCard(id){
+  function hasCard(id) {
     return UserCards.includes(id)
   }
   const [selectedCard, setSelectedCard] = useState(null);
@@ -114,7 +112,7 @@ const MarketPlace = ({ wallet }) => {
       <div className="grid-container" id="MyPokemonCards">
         {MarketPlaceCards !== null ? (
           MarketPlaceCards.map((card, index) => (
-            <div key={index} className="card-container" onClick={() => openPopup(card)}>
+            <div key={index} className="card-container" onClick={() => { console.log("Selected : ",card); openPopup(card) }}>
               <img src={card.images.small} alt={card.name} />
             </div>
           ))
@@ -125,46 +123,46 @@ const MarketPlace = ({ wallet }) => {
       {selectedCard && (
         <div className="popup-overlay">
           <div className="popupMarketPlace">
-          <button className="close-button-marketplace" onClick={closePopup}>Close</button>
-          <button className='exchange' variant="contained"
-                      onClick={() => buyFromMarketplace(wallet, SpotMap.get(selectedCard.id), selectedCards[0])} >Exchange card</button>
-            <img className= "Marketplace-popupImg" src={selectedCard.images.small} />
+            <button className="close-button-marketplace" onClick={closePopup}>Close</button>
+            <button className='exchange' variant="contained"
+              onClick={() => buyFromMarketplace(wallet, SpotMap.get(selectedCard.id), selectedCards[0])} >Exchange card</button>
+            <img className="Marketplace-popupImg" src={selectedCard.images.small} />
             {
-  [...MarketPlaceMap.keys()].map(key => {
-    if (key == selectedCard.id) {
-      return (
-        <div className="acceptedCards" >
-          <h2>Accepted Cards</h2>
-        <div className="grid-container-marketplace" id="MyPokemonCards" key={key}>
-          {MarketPlaceMap.get(key).map((card, index) => (
-            <div key={index} className="card-container-marketplace">
-              <img className="AcceptedCard-img" src={card.images.small} alt="Pokemon Card" />
-              {hasCard(card.id) &&
-               (selectedCards.includes(card.id) ? (
-                <Checkbox
-                  checked={true}
-                  onChange={() => handleCardDeselect(card.id)}
-                />
-              ) : (
-                <Checkbox
-                  checked={false}
-                  onChange={() => handleCardSelect(card.id)}
-                />
-              ))
-               }
-            </div>
-            
-          ))} 
-           
-        </div>
-        </div>
-      );
-    }
-    return null; // Vous pouvez ajouter cette ligne pour éviter les erreurs.
-  })
-}
+              [...MarketPlaceMap.keys()].map(key => {
+                if (key == selectedCard.id) {
+                  return (
+                    <div className="acceptedCards" >
+                      <h2>Accepted Cards</h2>
+                      <div className="grid-container-marketplace" id="MyPokemonCards" key={key}>
+                        {MarketPlaceMap.get(key).map((card, index) => (
+                          <div key={index} className="card-container-marketplace">
+                            <img className="AcceptedCard-img" src={card.images.small} alt="Pokemon Card" />
+                            {hasCard(card.id) &&
+                              (selectedCards.includes(card.id) ? (
+                                <Checkbox
+                                  checked={true}
+                                  onChange={() => handleCardDeselect(card.id)}
+                                />
+                              ) : (
+                                <Checkbox
+                                  checked={false}
+                                  onChange={() => handleCardSelect(card.id)}
+                                />
+                              ))
+                            }
+                          </div>
 
-            
+                        ))}
+
+                      </div>
+                    </div>
+                  );
+                }
+                return null; // Vous pouvez ajouter cette ligne pour éviter les erreurs.
+              })
+            }
+
+
           </div>
         </div>
       )}

@@ -102,7 +102,6 @@ export async function addToMarketplace(wallet: {
     const { details, contract } = wallet;
     const CollectionId = await uriToCollectionId(wallet, cardId)
     const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
-    console.log(wallet, cardId, CollectionId, AcceptedCards)
     await MarketPlace.sellCard(cardId, CollectionId, AcceptedCards)
 }
 
@@ -120,8 +119,8 @@ export async function buyFromMarketplace(wallet: {
     details: ethereum.Details;
     contract: Main;
 }, spot: CardStruct, currency: string) {
-    console.log(spot,currency)
     const { details, contract } = wallet;
     const MarketPlace = getContract<MarketPlace>(await contract.getMarketPlace(), MarketPlaceAbi, details.signer)
+    console.log("Buy Args : ", wallet, spot, currency)
     MarketPlace.buyCard(spot.spotId, currency, await contract.getCollectionIdFromName(currency))
 }

@@ -40,10 +40,9 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
     async function getAllCards() {
       try {
         const avalibleCards = await allCards(wallet);
-        console.log(avalibleCards[0])
-        
-        
-
+        const cardPromises = avalibleCards.map(card => pokemon.card.find(card))
+        const cards = await Promise.all(cardPromises);
+        setPokemonCards(cards);
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
