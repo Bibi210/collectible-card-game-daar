@@ -7,7 +7,11 @@ import Box from '@mui/material/Box';
 import TabList from '@mui/lab/TabList';
 import pokemon from 'pokemontcgsdk';
 import { Checkbox, Button } from '@mui/material';
-import { addToMarketplace, getAvalibleSet , allCards } from '../functions/functions'
+import { addToMarketplace, getAvalibleSet, allCards } from '../functions/functions'
+import InfoIcon from '@mui/icons-material/Info';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'; // Heart icon
+import SportsMmaIcon from '@mui/icons-material/SportsMma'; // Sword icon
 
 pokemon.configure({ apiKey: '03afe08b-77c3-42b8-886d-638a60b66f37' });
 
@@ -40,9 +44,16 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
     async function getAllCards() {
       try {
         const avalibleCards = await allCards(wallet);
+<<<<<<< Updated upstream
         const cardPromises = avalibleCards.map(card => pokemon.card.find(card))
         const cards = await Promise.all(cardPromises);
         setPokemonCards(cards);
+=======
+        console.log(avalibleCards[0])
+
+
+
+>>>>>>> Stashed changes
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
@@ -90,7 +101,7 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
                 {children}
                 <img className='cardImage' src={card.images.small} />
                 <div className="card-details">
-                  <h3>Card Details</h3>
+                  <h3>Card Details <InfoIcon fontSize="small" /></h3>
                   <p>
                     <strong>Supertype:</strong> {card.supertype}
                   </p>
@@ -98,20 +109,20 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
                     <strong>Subtypes:</strong> {card.subtypes ? card.subtypes.join(", ") : "N/A"}
                   </p>
                   <p>
-                    <strong>HP:</strong> {card.hp}
+                    <FitnessCenterIcon fontSize="small" /> <strong>HP:</strong> {card.hp}
                   </p>
                   <p>
-                    <strong>Types:</strong> {card.types ? card.types.join(", ") : "N/A"}
+                    <SportsMmaIcon fontSize="small" /> <strong>Types:</strong> {card.types ? card.types.join(", ") : "N/A"}
                   </p>
                   <p>
-                    <strong>Rules:</strong> {card.rules ? card.rules.join(", ") : "N/A"}
+                    <strong>Rules:</strong> {card.rules ? card.rules.join(", ") : "N/A"} <ArrowForwardIcon fontSize="small" />
                   </p>
                   <h3>Attacks</h3>
                   <ul>
                     {card.attacks ? (
                       card.attacks.map((attack, index) => (
                         <li key={index}>
-                          <strong>{attack.name}</strong> - {attack.text}
+                          <SportsMmaIcon fontSize="small" /> <strong>{attack.name}</strong> - {attack.text}
                         </li>
                       ))
                     ) : (
@@ -123,7 +134,7 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
                     {card.weaknesses ? (
                       card.weaknesses.map((weakness, index) => (
                         <li key={index}>
-                          <strong>Type:</strong> {weakness.type}, <strong>Value:</strong> {weakness.value}
+                          <FitnessCenterIcon fontSize="small" /> <strong>Type:</strong> {weakness.type}, <strong>Value:</strong> {weakness.value}
                         </li>
                       ))
                     ) : (
@@ -131,7 +142,7 @@ function Popup({ isVisible, onClose, children, card, wallet }) {
                     )}
                   </ul>
                   <h3>Retreat Cost</h3>
-                  <p>{card.retreatCost ? card.retreatCost.join(", ") : "N/A"}</p>
+                  <p>{card.retreatCost ? card.retreatCost.join(", ") : "N/A"} <ArrowForwardIcon fontSize="small" /></p>
                 </div>
               </TabPanel>
               <div className="panel2">
