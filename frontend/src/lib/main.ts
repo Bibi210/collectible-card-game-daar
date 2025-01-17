@@ -5,7 +5,7 @@ import Main from '@/abis/Main.json'
 
 
 export const correctChain = () => {
-  return 31337
+  return 128123
 }
 
 const mainAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3"

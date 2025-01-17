@@ -47,6 +47,12 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: '../typechain',
   },
+  networks: {
+    etherlink: {
+      url: "https://node.ghostnet.etherlink.com",  // URL of your local node (if you have one running)
+      accounts: [`fe2d46c2362a361b12bd9901955881ebad911161f23732f71866a06fa5ddc9b3`], // If you want to use a private key for deployment
+    },
+  },
 }
 
 export default config
