@@ -8,11 +8,13 @@ export const correctChain = () => {
   return 128123
 }
 
-const mainAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const mainAddr = "0x27c7DbE57fa7E477d3B85f1833d8D988de571617"
 
 export const init = async (details: ethereum.Details) => {
   const { provider, signer } = details
   const network = await provider.getNetwork()
+  console.log(network)
+  console.log("Main Address: ", mainAddr)
   if (correctChain() !== network.chainId) {
     console.error('Please switch to HardHat')
     return null

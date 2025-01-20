@@ -8,7 +8,8 @@ const deployer: DeployFunction = async hre => {
   const main = (await Main.deploy(deployer)) as Contract;
   await main.deployed();
   console.log("Main deployed to:", main.address);
-  await setEnv(main, deployer, hre)
+  console.log("Deployer: ", deployer)
+  await setEnv(main, hre)
 }
 
 export default deployer

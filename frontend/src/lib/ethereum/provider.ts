@@ -15,7 +15,7 @@ import { ethers } from 'ethers'
 // export const KOVAN_ENDPOINT = `${KOVAN_URL}/${KOVAN_KEY}`
 // export const kovan = new ethers.providers.JsonRpcProvider(KOVAN_ENDPOINT)
 
-export const LOCAL_URL = 'http://localhost:8545'
+export const LOCAL_URL = 'https://node.ghostnet.etherlink.com'
 export const local = new ethers.providers.JsonRpcProvider(LOCAL_URL)
 
 export const fromEnvironment = () => {

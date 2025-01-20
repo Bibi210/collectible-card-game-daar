@@ -6,10 +6,15 @@ import '@nomiclabs/hardhat-waffle'
 import '@typechain/hardhat'
 import 'hardhat-gas-reporter'
 import 'hardhat-abi-exporter'
+import "@nomicfoundation/hardhat-verify";
+import "./scripts/listNamedAccounts.ts";
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 const config: HardhatUserConfig = {
+  sourcify: {
+    enabled: true,
+  },
   solidity: {
     compilers: [
       {
@@ -53,6 +58,22 @@ const config: HardhatUserConfig = {
       accounts: [`fe2d46c2362a361b12bd9901955881ebad911161f23732f71866a06fa5ddc9b3`], // If you want to use a private key for deployment
     },
   },
+  etherscan: {
+    apiKey: {
+      'etherlink': '81984a22-112a-456b-8773-40ccddf435d1'
+    },
+    customChains: [
+      {
+        network: "etherlink",
+        chainId: 128123,
+        urls: {
+          apiURL: "https://testnet.explorer.etherlink.com/api",
+          browserURL: "https://testnet.explorer.etherlink.com"
+        }
+      }
+    ]
+  }
+
 }
 
 export default config
