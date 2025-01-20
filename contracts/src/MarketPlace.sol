@@ -109,6 +109,16 @@ contract MarketPlace is Ownable {
     );
 
     emit Exchange(buyer, seller);
+    _idToCollection[inMarketCard.collectionId].superTransferFrom(
+      inMarketCard.owner,
+      buyerCard.owner,
+      inMarketTokenId
+    );
+    _idToCollection[buyerCard.collectionId].superTransferFrom(
+      buyerCard.owner,
+      inMarketCard.owner,
+      buyerTokenId
+    );
     inMarketCard.acceptedCurrency = buyerCard;
   }
 

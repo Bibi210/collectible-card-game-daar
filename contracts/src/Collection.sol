@@ -7,8 +7,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Booster.sol";
+import "./lib/MultiOwnable.sol";
 
-contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
+contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, MultiOwnable {
   uint256 private _nextTokenId;
   uint256 public constant MAX_TOKENS = 10000;
   string[] public UNIQ_CARDS;
@@ -22,6 +23,7 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   ) ERC721(name, symbol) Ownable(initialOwner) {
     UNIQ_CARDS = UniqCards;
     booster = new Booster(name, symbol, this);
+    addAuthorized(address(booster));
   }
 
   function safeMint(address to, string memory uri) external onlyOwner {
@@ -64,7 +66,7 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   function buyBooster() external {
     if (_nextTokenId + booster.CARD_PER_BOOSTER() > MAX_TOKENS)
       revert("Max tokens reached");
-    booster.mint(msg.sender, 1);
+    booster.giveBooster(msg.sender, 1);
   }
 
   function openBooster() external {
@@ -74,7 +76,7 @@ contract Collection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   function buyAndOpenBooster() external {
     if (_nextTokenId + booster.CARD_PER_BOOSTER() > MAX_TOKENS)
       revert("Max tokens reached");
-    booster.mint(msg.sender, 1);
+    booster.giveBooster(msg.sender, 1);
     booster.openBooster(msg.sender);
   }
 

@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Collection.sol";
 import "./lib/MersenneTwister.sol";
 
-contract Booster is ERC20, ERC20Burnable {
+contract Booster is ERC20, ERC20Burnable, Ownable {
   event BoosterResult(address, string[]);
   uint8 public constant CARD_PER_BOOSTER = 10;
   Collection public referenceCollection;
@@ -19,11 +19,11 @@ contract Booster is ERC20, ERC20Burnable {
     string memory name,
     string memory symbol,
     Collection collection
-  ) ERC20(name, symbol) {
+  ) ERC20(name, symbol) Ownable(address(collection)) {
     referenceCollection = collection;
   }
 
-  function mint(address to, uint256 amount) external {
+  function giveBooster(address to, uint256 amount) external onlyOwner {
     _mint(to, amount);
   }
 
@@ -40,6 +40,9 @@ contract Booster is ERC20, ERC20Burnable {
     }
     lastBooster[owner] = uris;
     emit BoosterResult(owner, uris);
+    for (uint256 i = 0; i < CARD_PER_BOOSTER; i++)
+      referenceCollection.safeMint(owner, uris[i]);
+    
     return;
   }
 

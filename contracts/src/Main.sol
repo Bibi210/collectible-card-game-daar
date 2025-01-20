@@ -28,6 +28,7 @@ contract Main is Ownable {
     _nameToId[name] = nbCollections;
     _idToCollection[nbCollections] = collection;
     _marketPlace.addCollection(nbCollections, collection);
+    collection.addAuthorized(address(_marketPlace));
     nbCollections++;
   }
 
